@@ -90,6 +90,41 @@ theorem existsUnique_continuousAlgHom_of_norm_le_one [CompleteSpace K]
 
 end TateAlgebra
 
+/-! ## Quotient norms -/
+
+section QuotientNorm
+
+variable {B : Type v} [SeminormedAddCommGroup B]
+variable {C : Type w} [SeminormedAddCommGroup C]
+
+/-- A map is a quotient-norm presentation when it is surjective and the norm of every target
+element is the infimum of the norms of all its preimages. -/
+def IsQuotientNorm (f : B → C) : Prop :=
+  Function.Surjective f ∧
+    ∀ y : C, ‖y‖ = sInf ((fun x : B ↦ ‖x‖) '' {x | f x = y})
+
+namespace IsQuotientNorm
+
+variable {f : B → C}
+
+/-- A quotient-norm presentation is surjective. -/
+theorem surjective (hf : IsQuotientNorm f) : Function.Surjective f := sorry
+
+/-- The target norm is the infimum of the source norms in each fiber. -/
+theorem norm_eq_sInf_fiber (hf : IsQuotientNorm f) (y : C) :
+    ‖y‖ = sInf ((fun x : B ↦ ‖x‖) '' {x | f x = y}) := sorry
+
+/-- A quotient-norm presentation is norm-nonincreasing. -/
+theorem norm_le (hf : IsQuotientNorm f) (x : B) : ‖f x‖ ≤ ‖x‖ := sorry
+
+/-- Every target element has lifts with norm arbitrarily close to its quotient norm. -/
+theorem exists_preimage_norm_lt (hf : IsQuotientNorm f) {ε : ℝ} (hε : 0 < ε) (y : C) :
+    ∃ x : B, f x = y ∧ ‖x‖ < ‖y‖ + ε := sorry
+
+end IsQuotientNorm
+
+end QuotientNorm
+
 /-! ## Affinoid algebras and affinoid spectra -/
 
 section AffinoidAlgebra
@@ -98,10 +133,17 @@ variable (K : Type u) [NontriviallyNormedField K] [CompleteSpace K] [IsUltrametr
 variable (A : Type v) [NormedCommRing A] [NormedAlgebra K A] [CompleteSpace A]
   [IsUltrametricDist A]
 
-/-- A strict `K`-affinoid algebra is a continuous quotient of a Tate algebra in finitely many
-variables. -/
+/-- A strict `K`-affinoid algebra admits a presentation by a Tate algebra in finitely many
+variables for which the given norm on `A` is exactly the quotient norm. -/
 def IsAffinoidAlgebra : Prop :=
-  ∃ (n : ℕ) (π : ContinuousAlgHom K (TateAlgebra K (Fin n)) A), Function.Surjective π
+  ∃ (n : ℕ) (π : ContinuousAlgHom K (TateAlgebra K (Fin n)) A),
+    IsQuotientNorm (π : TateAlgebra K (Fin n) → A)
+
+/-- Unpack an affinoid algebra as a quotient-norm presentation by a finite Tate algebra. -/
+theorem exists_quotient_presentation_of_isAffinoidAlgebra (hA : IsAffinoidAlgebra K A) :
+    ∃ (n : ℕ) (π : ContinuousAlgHom K (TateAlgebra K (Fin n)) A),
+      IsQuotientNorm (π : TateAlgebra K (Fin n) → A) :=
+  hA
 
 /-- Every algebra homomorphism between strict affinoid algebras is continuous. -/
 theorem continuous_of_isAffinoidAlgebra

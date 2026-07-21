@@ -38,9 +38,10 @@ Do not overwrite or force-push merged remote work.
   prevents a solved Development body from silently dropping a section variable from its elaborated
   declaration type.
 
-Production modules such as `Rigid/TateAlgebra/Basic.lean` and
-`Rigid/TateAlgebra/GaussNorm.lean` should contain no `sorry`. `Rigid.lean` imports the Development
-side of the pair; Challenge remains a separately checked module.
+Production modules such as `Rigid/TateAlgebra/Basic.lean`,
+`Rigid/TateAlgebra/GaussNorm.lean`, and `Rigid/AffinoidAlgebra/QuotientNorm.lean` should contain no
+`sorry`. `Rigid.lean` imports the Development side of the pair; Challenge remains a separately
+checked module.
 
 ## Required checks
 
