@@ -1,4 +1,5 @@
 import Mathlib
+import Rigid.AffinoidAlgebra.AutomaticContinuity
 import Rigid.AffinoidAlgebra.Basic
 import Rigid.AffinoidAlgebra.QuotientNorm
 import Rigid.AffinoidAlgebra.QuotientTopology
@@ -376,7 +377,8 @@ theorem continuous_for_affinoidTopology_of_isAffinoidAlgebra
     {A : Type v} [CommRing A] [Algebra K A]
     {B : Type w} [CommRing B] [Algebra K B]
     (hA : IsAffinoidAlgebra K A) (hB : IsAffinoidAlgebra K B) (f : A →ₐ[K] B) :
-    @Continuous A B (affinoidTopology K A hA) (affinoidTopology K B hB) f := sorry
+    @Continuous A B (affinoidTopology K A hA) (affinoidTopology K B hB) f :=
+  Rigid.continuous_for_affinoidPresentationData K hA.presentation.ideal hA.presentation.equiv hB.presentation.ideal hB.presentation.equiv f
 
 /-- Unpack an affinoid algebra as a surjective algebraic presentation by a finite Tate algebra. -/
 theorem exists_surjective_presentation_of_isAffinoidAlgebra (hA : IsAffinoidAlgebra K A) :
