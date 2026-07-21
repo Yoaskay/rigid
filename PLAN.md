@@ -11,7 +11,9 @@ The first pass will treat a complete nontrivially normed field `K` with
 - Global spaces and morphisms will be built only after the affinoid theory and its sheaf theorem are
   available.
 - `Rigid/Challenge.lean` is a standalone specification file. It has only mathlib imports and keeps
-  the sorried target declarations independent of the eventual implementation import graph.
+  all target declarations independent of the implementation import graph.
+- `Rigid/Development.lean` mirrors the challenge but may import project modules. Implemented
+  declarations are removed from this copy, so its remaining `sorry`s measure development progress.
 
 This deliberately postpones non-strict polyradii, trivially valued fields, adic spaces, and general
 Huber pairs.
@@ -120,12 +122,14 @@ Rigid/
   Comparison/Affinoid.lean
   Comparison/Global.lean
   Challenge.lean
+  Development.lean
 ```
 
-Keep the implementation split by dependency. Once production modules exist, the root module should
-import those modules rather than `Challenge.lean`; the challenge file remains a separately checked,
-mathlib-only specification and may repeat production declaration names because the two import graphs
-are not combined.
+Keep the implementation split by dependency. The root module imports `Development.lean`, while the
+challenge file remains a separately checked, mathlib-only specification. The two files may repeat
+declaration names because their import graphs are never combined. As each declaration is
+implemented, import its production module from `Development.lean` and remove its sorried duplicate
+there.
 
 ## Near-term milestone
 
