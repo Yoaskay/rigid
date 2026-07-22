@@ -80,7 +80,6 @@ theorem coe_tateVariable (i : ι) :
 noncomputable def gaussNorm : TateAlgebra K ι → ℝ :=
   Rigid.gaussNorm K ι
 
-
 /-- The defining coefficient formula for the Gauss norm, without a finiteness assumption on the
 variable type. -/
 theorem gaussNorm_eq_sSup_coeff (f : TateAlgebra K ι) :
@@ -101,7 +100,6 @@ noncomputable instance tateAlgebraNormedAlgebra : NormedAlgebra K (TateAlgebra K
 
 noncomputable instance tateAlgebraIsUltrametricDist : IsUltrametricDist (TateAlgebra K ι) :=
   Rigid.tateAlgebraIsUltrametricDist K ι
-
 
 /-- The constant coefficient of a scalar in the Tate algebra is that scalar. -/
 @[simp]
@@ -364,7 +362,6 @@ noncomputable def residueNormedAlgebra (P : AffinoidPresentation K A) :
     letI := P.residueNormedCommRing
     NormedAlgebra K A := sorry
 
-
 /-- The scalar embedding of the residue normed algebra agrees with the presentation map applied to
 constant Tate series. -/
 @[simp]
@@ -437,7 +434,8 @@ theorem continuous_for_affinoidTopology_of_isAffinoidAlgebra
     {B : Type w} [CommRing B] [Algebra K B]
     (hA : IsAffinoidAlgebra K A) (hB : IsAffinoidAlgebra K B) (f : A →ₐ[K] B) :
     @Continuous A B (affinoidTopology K A hA) (affinoidTopology K B hB) f :=
-  Rigid.continuous_for_affinoidPresentationData K hA.presentation.ideal hA.presentation.equiv hB.presentation.ideal hB.presentation.equiv f
+  Rigid.continuous_for_affinoidPresentationData K hA.presentation.ideal hA.presentation.equiv
+    hB.presentation.ideal hB.presentation.equiv f
 
 /-- Unpack an affinoid algebra as a surjective algebraic presentation by a finite Tate algebra. -/
 theorem exists_surjective_presentation_of_isAffinoidAlgebra (hA : IsAffinoidAlgebra K A) :
@@ -889,6 +887,7 @@ theorem continuous_comap {B : Type w} [NormedCommRing B] [NormedAlgebra K B]
     Continuous (comap K A f hf) :=
   (continuous_iff_eval K A).2 fun a ↦ continuous_eval K B (f a)
 
+set_option linter.overlappingInstances false in
 noncomputable instance berkovichSpectrumOverT2Space [CompleteSpace A] [IsUltrametricDist A] :
     T2Space (BerkovichSpectrumOver K A) :=
   (isEmbedding_toBerkovichSpectrum K A).t2Space
@@ -918,6 +917,7 @@ theorem isCompact_univ : IsCompact (Set.univ : Set (BerkovichSpectrumOver K A)) 
   rw [(isEmbedding_toBerkovichSpectrum K A).isCompact_iff, Set.image_univ]
   exact (isClosed_range_toBerkovichSpectrum K A).isCompact
 
+set_option linter.overlappingInstances false in
 noncomputable instance berkovichSpectrumOverCompactSpace [CompleteSpace A]
     [IsUltrametricDist A] : CompactSpace (BerkovichSpectrumOver K A) :=
   isCompact_univ_iff.mp (isCompact_univ K A)
@@ -1206,7 +1206,6 @@ end RationalDomain
 
 end BerkovichSpectrumOver
 
-
 /-! ### The rational basis and its structure sheaf -/
 
 /-- A rational subdomain of an affinoid Berkovich spectrum, bundled with the rational datum that
@@ -1337,7 +1336,6 @@ theorem isCompact_univ_berkovichSpectrumOver (hA : IsAffinoidAlgebra K A) :
   exact BerkovichSpectrumOver.isCompact_univ K A
 
 end AffinoidAlgebra
-
 
 /-- A universe-bounded strict affinoid algebra, used as explicit local-model data for global
 analytic spaces. -/
@@ -1487,7 +1485,6 @@ theorem isQuasiCompact_iff {X : RigidSpace K} (U : AdmissibleOpen K X) :
         ∃ s : Set ι, s.Finite ∧ IsCover K (fun i : s ↦ V i.1) U := sorry
 
 end AdmissibleOpen
-
 
 namespace StructureSheaf
 
@@ -1645,7 +1642,6 @@ end AffinoidDomain
 /-- A family of affinoid domains is an admissible cover. -/
 def IsAdmissibleAffinoidCover {X : RigidSpace K} {ι : Type (u + 1)}
     (U : ι → AffinoidDomain K X) : Prop := sorry
-
 
 /-- Affinoid admissible covers are precisely admissible-open covers of the full space. -/
 theorem isAdmissibleAffinoidCover_iff {X : RigidSpace K} {ι : Type (u + 1)}
@@ -2040,7 +2036,6 @@ def IsStrict {X : BerkovichSpace K} (U : AffinoidDomain K X) : Prop := sorry
 
 end AffinoidDomain
 
-
 /-- Restriction of a Berkovich space to an affinoid domain. -/
 noncomputable def restrictToAffinoidDomain {X : BerkovichSpace K}
     (U : AffinoidDomain K X) : BerkovichSpace K := sorry
@@ -2304,7 +2299,6 @@ theorem comparisonRigidSpaceOfAffinoid_obj {A : Type v} [CommRing A] [Algebra K 
 theorem comparisonBerkovichSpaceOfAffinoid_obj {A : Type v} [CommRing A] [Algebra K A]
     (hA : IsAffinoidAlgebra K A) :
     (comparisonBerkovichSpaceOfAffinoid K hA).obj = BerkovichSpace.ofAffinoid K hA := sorry
-
 
 /-- Forgetting the comparison-subcategory structure recovers the usual affinoid rigid morphism. -/
 theorem comparisonRigidSpaceOfAffinoidMap_forget

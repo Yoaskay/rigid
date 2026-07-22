@@ -722,12 +722,14 @@ theorem continuous_comap {B : Type w} [NormedCommRing B] [NormedAlgebra K B]
     [CompleteSpace B] [IsUltrametricDist B] (f : A →ₐ[K] B) (hf : ∀ a, ‖f a‖ ≤ ‖a‖) :
     Continuous (comap K A f hf) := sorry
 
+set_option linter.overlappingInstances false in
 noncomputable instance berkovichSpectrumOverT2Space [CompleteSpace A] [IsUltrametricDist A] :
     T2Space (BerkovichSpectrumOver K A) := sorry
 
 /-- The relative Berkovich spectrum is compact. -/
 theorem isCompact_univ : IsCompact (Set.univ : Set (BerkovichSpectrumOver K A)) := sorry
 
+set_option linter.overlappingInstances false in
 noncomputable instance berkovichSpectrumOverCompactSpace [CompleteSpace A]
     [IsUltrametricDist A] : CompactSpace (BerkovichSpectrumOver K A) := sorry
 
