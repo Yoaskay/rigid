@@ -32,7 +32,7 @@ open CategoryTheory
 open Filter
 open scoped Topology
 
-universe u v w
+universe u v w z
 
 namespace RigidChallenge
 
@@ -827,6 +827,52 @@ noncomputable def ofAffinoid {A : Type v} [CommRing A] [Algebra K A]
 noncomputable def pointsOfAffinoidEquiv {A : Type v} [CommRing A] [Algebra K A]
     (hA : IsAffinoidAlgebra K A) : Point K (ofAffinoid K hA) ≃ MaximalSpectrum A := sorry
 
+/-- Pullback of maximal ideals along a morphism of affinoid algebras. -/
+noncomputable def maximalSpectrumComap {A : Type v} {B : Type w}
+    [CommRing A] [Algebra K A] [CommRing B] [Algebra K B]
+    (hA : IsAffinoidAlgebra K A) (hB : IsAffinoidAlgebra K B) (f : A →ₐ[K] B) :
+    MaximalSpectrum B → MaximalSpectrum A := sorry
+
+@[simp]
+theorem maximalSpectrumComap_id {A : Type v} [CommRing A] [Algebra K A]
+    (hA : IsAffinoidAlgebra K A) :
+    maximalSpectrumComap K hA hA (AlgHom.id K A) = id := sorry
+
+@[simp]
+theorem maximalSpectrumComap_comp {A : Type v} {B : Type w} {C : Type z}
+    [CommRing A] [Algebra K A] [CommRing B] [Algebra K B] [CommRing C] [Algebra K C]
+    (hA : IsAffinoidAlgebra K A) (hB : IsAffinoidAlgebra K B)
+    (hC : IsAffinoidAlgebra K C) (f : A →ₐ[K] B) (g : B →ₐ[K] C) :
+    maximalSpectrumComap K hA hC (g.comp f) =
+      maximalSpectrumComap K hA hB f ∘ maximalSpectrumComap K hB hC g := sorry
+
+/-- The morphism of affinoid rigid spaces induced contravariantly by an algebra homomorphism. -/
+noncomputable def ofAffinoidMap {A : Type v} {B : Type w}
+    [CommRing A] [Algebra K A] [CommRing B] [Algebra K B]
+    (hA : IsAffinoidAlgebra K A) (hB : IsAffinoidAlgebra K B) (f : A →ₐ[K] B) :
+    ofAffinoid K hB ⟶ ofAffinoid K hA := sorry
+
+@[simp]
+theorem ofAffinoidMap_id {A : Type v} [CommRing A] [Algebra K A]
+    (hA : IsAffinoidAlgebra K A) :
+    ofAffinoidMap K hA hA (AlgHom.id K A) = 𝟙 (ofAffinoid K hA) := sorry
+
+@[simp]
+theorem ofAffinoidMap_comp {A : Type v} {B : Type w} {C : Type*}
+    [CommRing A] [Algebra K A] [CommRing B] [Algebra K B] [CommRing C] [Algebra K C]
+    (hA : IsAffinoidAlgebra K A) (hB : IsAffinoidAlgebra K B)
+    (hC : IsAffinoidAlgebra K C) (f : A →ₐ[K] B) (g : B →ₐ[K] C) :
+    ofAffinoidMap K hB hC g ≫ ofAffinoidMap K hA hB f =
+      ofAffinoidMap K hA hC (g.comp f) := sorry
+
+/-- The affinoid point equivalence is natural in the coordinate algebra. -/
+theorem pointsOfAffinoidEquiv_naturality {A : Type v} {B : Type w}
+    [CommRing A] [Algebra K A] [CommRing B] [Algebra K B]
+    (hA : IsAffinoidAlgebra K A) (hB : IsAffinoidAlgebra K B) (f : A →ₐ[K] B)
+    (x : Point K (ofAffinoid K hB)) :
+    pointsOfAffinoidEquiv K hA (Point.map K (ofAffinoidMap K hA hB f) x) =
+      maximalSpectrumComap K hA hB f (pointsOfAffinoidEquiv K hB x) := sorry
+
 /-- An affinoid rigid space is locally affinoid. -/
 theorem isLocallyAffinoid_ofAffinoid {A : Type v} [CommRing A] [Algebra K A]
     (hA : IsAffinoidAlgebra K A) : IsLocallyAffinoid K (ofAffinoid K hA) := sorry
@@ -987,6 +1033,67 @@ noncomputable def pointsOfAffinoidHomeomorph {A : Type v} [CommRing A] [Algebra 
       (letI : NormedCommRing A := hA.presentation.residueNormedCommRing K A
        BerkovichSpectrum A) := sorry
 
+/-- Pullback of Berkovich spectra along a morphism of affinoid algebras. -/
+noncomputable def spectrumComap {A : Type v} {B : Type w}
+    [CommRing A] [Algebra K A] [CommRing B] [Algebra K B]
+    (hA : IsAffinoidAlgebra K A) (hB : IsAffinoidAlgebra K B) (f : A →ₐ[K] B) :
+    (letI : NormedCommRing B := hB.presentation.residueNormedCommRing K B
+     BerkovichSpectrum B) →
+      (letI : NormedCommRing A := hA.presentation.residueNormedCommRing K A
+       BerkovichSpectrum A) := sorry
+
+@[simp]
+theorem spectrumComap_id {A : Type v} [CommRing A] [Algebra K A]
+    (hA : IsAffinoidAlgebra K A) :
+    letI : NormedCommRing A := hA.presentation.residueNormedCommRing K A
+    spectrumComap K hA hA (AlgHom.id K A) = id := sorry
+
+@[simp]
+theorem spectrumComap_comp {A : Type v} {B : Type w} {C : Type z}
+    [CommRing A] [Algebra K A] [CommRing B] [Algebra K B] [CommRing C] [Algebra K C]
+    (hA : IsAffinoidAlgebra K A) (hB : IsAffinoidAlgebra K B)
+    (hC : IsAffinoidAlgebra K C) (f : A →ₐ[K] B) (g : B →ₐ[K] C) :
+    letI : NormedCommRing A := hA.presentation.residueNormedCommRing K A
+    letI : NormedCommRing B := hB.presentation.residueNormedCommRing K B
+    letI : NormedCommRing C := hC.presentation.residueNormedCommRing K C
+    spectrumComap K hA hC (g.comp f) =
+      spectrumComap K hA hB f ∘ spectrumComap K hB hC g := sorry
+
+/-- Pullback on affinoid Berkovich spectra is continuous. -/
+theorem continuous_spectrumComap {A : Type v} {B : Type w}
+    [CommRing A] [Algebra K A] [CommRing B] [Algebra K B]
+    (hA : IsAffinoidAlgebra K A) (hB : IsAffinoidAlgebra K B) (f : A →ₐ[K] B) :
+    letI : NormedCommRing A := hA.presentation.residueNormedCommRing K A
+    letI : NormedCommRing B := hB.presentation.residueNormedCommRing K B
+    Continuous (spectrumComap K hA hB f) := sorry
+
+/-- The morphism of affinoid Berkovich spaces induced contravariantly by an algebra homomorphism. -/
+noncomputable def ofAffinoidMap {A : Type v} {B : Type w}
+    [CommRing A] [Algebra K A] [CommRing B] [Algebra K B]
+    (hA : IsAffinoidAlgebra K A) (hB : IsAffinoidAlgebra K B) (f : A →ₐ[K] B) :
+    ofAffinoid K hB ⟶ ofAffinoid K hA := sorry
+
+@[simp]
+theorem ofAffinoidMap_id {A : Type v} [CommRing A] [Algebra K A]
+    (hA : IsAffinoidAlgebra K A) :
+    ofAffinoidMap K hA hA (AlgHom.id K A) = 𝟙 (ofAffinoid K hA) := sorry
+
+@[simp]
+theorem ofAffinoidMap_comp {A : Type v} {B : Type w} {C : Type*}
+    [CommRing A] [Algebra K A] [CommRing B] [Algebra K B] [CommRing C] [Algebra K C]
+    (hA : IsAffinoidAlgebra K A) (hB : IsAffinoidAlgebra K B)
+    (hC : IsAffinoidAlgebra K C) (f : A →ₐ[K] B) (g : B →ₐ[K] C) :
+    ofAffinoidMap K hB hC g ≫ ofAffinoidMap K hA hB f =
+      ofAffinoidMap K hA hC (g.comp f) := sorry
+
+/-- The affinoid point homeomorphism is natural in the coordinate algebra. -/
+theorem pointsOfAffinoidHomeomorph_naturality {A : Type v} {B : Type w}
+    [CommRing A] [Algebra K A] [CommRing B] [Algebra K B]
+    (hA : IsAffinoidAlgebra K A) (hB : IsAffinoidAlgebra K B) (f : A →ₐ[K] B)
+    (x : Point K (ofAffinoid K hB)) :
+    pointsOfAffinoidHomeomorph K hA (Point.map K (ofAffinoidMap K hA hB f) x) =
+      spectrumComap K hA hB f (pointsOfAffinoidHomeomorph K hB x) := sorry
+
 /-- An affinoid Berkovich space is good. -/
 theorem isGood_ofAffinoid {A : Type v} [CommRing A] [Algebra K A]
     (hA : IsAffinoidAlgebra K A) : IsGood K (ofAffinoid K hA) := sorry
@@ -1058,6 +1165,16 @@ noncomputable def comparisonRigidSpaceOfAffinoid {A : Type v} [CommRing A] [Alge
 /-- An affinoid algebra gives an object of the Berkovich comparison subcategory. -/
 noncomputable def comparisonBerkovichSpaceOfAffinoid {A : Type v} [CommRing A] [Algebra K A]
     (hA : IsAffinoidAlgebra K A) : ComparisonBerkovichSpace K := sorry
+
+@[simp]
+theorem comparisonRigidSpaceOfAffinoid_obj {A : Type v} [CommRing A] [Algebra K A]
+    (hA : IsAffinoidAlgebra K A) :
+    (comparisonRigidSpaceOfAffinoid K hA).obj = RigidSpace.ofAffinoid K hA := sorry
+
+@[simp]
+theorem comparisonBerkovichSpaceOfAffinoid_obj {A : Type v} [CommRing A] [Algebra K A]
+    (hA : IsAffinoidAlgebra K A) :
+    (comparisonBerkovichSpaceOfAffinoid K hA).obj = BerkovichSpace.ofAffinoid K hA := sorry
 
 /-- The rigid comparison subcategory is nonempty. -/
 theorem nonempty_comparisonRigidSpace : Nonempty (ComparisonRigidSpace K) := sorry
