@@ -881,8 +881,9 @@ def inclusion {n : ℕ} (g : A) (f : Fin n → A) :
 theorem isClosed_rationalDomainSet {n : ℕ} (g : A) (f : Fin n → A) :
     IsClosed (rationalDomainSet K A g f) := sorry
 
-noncomputable instance rationalDomainCompactSpace {n : ℕ} (g : A) (f : Fin n → A) :
-    CompactSpace (RationalDomain K A g f) := sorry
+set_option linter.overlappingInstances false in
+noncomputable instance rationalDomainCompactSpace [CompleteSpace A] [IsUltrametricDist A]
+    {n : ℕ} (g : A) (f : Fin n → A) : CompactSpace (RationalDomain K A g f) := sorry
 
 /-- Rational domains are compact. -/
 theorem isCompact_univ {n : ℕ} (g : A) (f : Fin n → A) :

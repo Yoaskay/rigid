@@ -37,6 +37,7 @@ Reuse `MvPowerSeries.IsRestricted` from mathlib for the underlying restricted po
    **Done** (`TateAlgebra/NormedRing`, `TateAlgebra/UniversalProperty`); neither completeness of `K`
    nor finiteness of the variable set was needed.
 5. Extend the universal property from tuples of norm at most one to power-bounded tuples.
+   **Done** (`TateAlgebra/PowerBoundedUniversalProperty`).
 6. Generalize to positive polyradii only after the strict unit-radius API is stable.
 
 The multiplicativity proof uses the largest norm-attaining coefficient for a monomial order. In the

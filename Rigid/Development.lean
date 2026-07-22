@@ -1154,8 +1154,10 @@ theorem isClosed_rationalDomainSet {n : ℕ} (g : A) (f : Fin n → A) :
     (BerkovichSpectrumOver.continuous_eval K A _)
     (BerkovichSpectrumOver.continuous_eval K A _)
 
-noncomputable instance rationalDomainCompactSpace {n : ℕ} (g : A) (f : Fin n → A) :
-    CompactSpace (RationalDomain K A g f) := sorry
+set_option linter.overlappingInstances false in
+noncomputable instance rationalDomainCompactSpace [CompleteSpace A] [IsUltrametricDist A]
+    {n : ℕ} (g : A) (f : Fin n → A) : CompactSpace (RationalDomain K A g f) :=
+  isCompact_iff_compactSpace.mp (isClosed_rationalDomainSet K A g f).isCompact
 
 /-- Rational domains are compact. -/
 theorem isCompact_univ {n : ℕ} (g : A) (f : Fin n → A) :
