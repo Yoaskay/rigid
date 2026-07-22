@@ -7,6 +7,7 @@ import Rigid.Berkovich.RelativeSpectrum
 import Rigid.Berkovich.RelativeNonempty
 import Rigid.Berkovich.CompletedResidue
 import Rigid.Berkovich.AffinoidDomain
+import Rigid.AffinoidSpectrum.RationalBasis
 import Rigid.AffinoidAlgebra.QuotientNorm
 import Rigid.AffinoidAlgebra.QuotientTopology
 import Rigid.AffinoidAlgebra.RationalDatum
@@ -1272,34 +1273,59 @@ abbrev Sections (U : AffinoidRationalSubdomain K A) :=
 
 /-- The intersection of two rational subdomains, represented again by a rational datum. -/
 noncomputable def inter (U V : AffinoidRationalSubdomain K A) :
-    AffinoidRationalSubdomain K A := sorry
+    AffinoidRationalSubdomain K A where
+  n := (U.n + 1) * (V.n + 1)
+  g := U.g * V.g
+  f k :=
+    Fin.cases U.g U.f (finProdFinEquiv.symm k).1 *
+      Fin.cases V.g V.f (finProdFinEquiv.symm k).2
+  isRational := by
+    exact (Rigid.AffinoidRationalSubdomain.inter K A
+      { n := U.n, g := U.g, f := U.f, isRational := U.isRational }
+      { n := V.n, g := V.g, f := V.f, isRational := V.isRational }).isRational
 
 @[simp]
 theorem carrier_inter (U V : AffinoidRationalSubdomain K A) :
-    (inter K A U V).carrier = U.carrier ∩ V.carrier := sorry
+    (inter K A U V).carrier = U.carrier ∩ V.carrier := by
+  ext x
+  have h := Set.ext_iff.mp
+    (Rigid.AffinoidRationalSubdomain.carrier_inter K A
+      { n := U.n, g := U.g, f := U.f, isRational := U.isRational }
+      { n := V.n, g := V.g, f := V.f, isRational := V.isRational })
+    { toBerkovichSpectrum :=
+        { seminorm := x.toBerkovichSpectrum.seminorm
+          le_norm' := x.toBerkovichSpectrum.le_norm' }
+      map_algebraMap' := x.map_algebraMap' }
+  exact h
 
 /-- The intersection is contained in its left factor. -/
 theorem inter_subset_left (U V : AffinoidRationalSubdomain K A) :
-    (inter K A U V).carrier ⊆ U.carrier := sorry
+    (inter K A U V).carrier ⊆ U.carrier := by
+  rw [carrier_inter]
+  exact Set.inter_subset_left
 
 /-- The intersection is contained in its right factor. -/
 theorem inter_subset_right (U V : AffinoidRationalSubdomain K A) :
-    (inter K A U V).carrier ⊆ V.carrier := sorry
+    (inter K A U V).carrier ⊆ V.carrier := by
+  rw [carrier_inter]
+  exact Set.inter_subset_right
 
 /-- Restriction of analytic functions along an inclusion of rational subdomains. -/
-noncomputable def restriction {U V : AffinoidRationalSubdomain K A}
+noncomputable def restriction (hA : IsAffinoidAlgebra K A)
+    {U V : AffinoidRationalSubdomain K A}
     (hUV : U.carrier ⊆ V.carrier) : ContinuousAlgHom K V.Sections U.Sections := sorry
 
 @[simp]
-theorem restriction_id (U : AffinoidRationalSubdomain K A) :
-    restriction K A (U := U) (V := U) Set.Subset.rfl =
+theorem restriction_id (hA : IsAffinoidAlgebra K A) (U : AffinoidRationalSubdomain K A) :
+    restriction K A hA (U := U) (V := U) Set.Subset.rfl =
       ContinuousAlgHom.id K U.Sections := sorry
 
 @[simp]
-theorem restriction_comp {U V W : AffinoidRationalSubdomain K A}
+theorem restriction_comp (hA : IsAffinoidAlgebra K A)
+    {U V W : AffinoidRationalSubdomain K A}
     (hUV : U.carrier ⊆ V.carrier) (hWU : W.carrier ⊆ U.carrier) :
-    (restriction K A hWU).comp (restriction K A hUV) =
-      restriction K A (hWU.trans hUV) := sorry
+    (restriction K A hA hWU).comp (restriction K A hA hUV) =
+      restriction K A hA (hWU.trans hUV) := sorry
 
 /-- A finite rational cover of a rational subdomain. -/
 structure Cover (U : AffinoidRationalSubdomain K A) where
@@ -1312,29 +1338,33 @@ namespace Cover
 
 /-- A family of sections on a rational cover is compatible when its restrictions agree on every
 pairwise intersection. -/
-def IsCompatible {U : AffinoidRationalSubdomain K A} (𝒰 : Cover K A U)
+def IsCompatible (hA : IsAffinoidAlgebra K A)
+    {U : AffinoidRationalSubdomain K A} (𝒰 : Cover K A U)
     (s : ∀ i, (𝒰.domain i).Sections) : Prop :=
   ∀ i j,
-    restriction K A (inter_subset_left K A (𝒰.domain i) (𝒰.domain j)) (s i) =
-      restriction K A (inter_subset_right K A (𝒰.domain i) (𝒰.domain j)) (s j)
+    restriction K A hA (inter_subset_left K A (𝒰.domain i) (𝒰.domain j)) (s i) =
+      restriction K A hA (inter_subset_right K A (𝒰.domain i) (𝒰.domain j)) (s j)
 
 /-- The rational-localization presheaf satisfies the sheaf condition on finite rational covers. -/
-theorem existsUnique_glue {U : AffinoidRationalSubdomain K A} (𝒰 : Cover K A U)
-    (s : ∀ i, (𝒰.domain i).Sections) (hs : IsCompatible K A 𝒰 s) :
-    ∃! t : U.Sections, ∀ i, restriction K A (𝒰.subset i) t = s i := sorry
+theorem existsUnique_glue (hA : IsAffinoidAlgebra K A)
+    {U : AffinoidRationalSubdomain K A} (𝒰 : Cover K A U)
+    (s : ∀ i, (𝒰.domain i).Sections) (hs : IsCompatible K A hA 𝒰 s) :
+    ∃! t : U.Sections, ∀ i, restriction K A hA (𝒰.subset i) t = s i := sorry
 
 /-- The augmented Čech complex of the rational-localization presheaf for a finite rational cover. -/
-noncomputable def augmentedCechComplex {U : AffinoidRationalSubdomain K A}
+noncomputable def augmentedCechComplex (hA : IsAffinoidAlgebra K A)
+    {U : AffinoidRationalSubdomain K A}
     (𝒰 : Cover K A U) : CochainComplex (ModuleCat K) ℕ := sorry
 
 /-- Degree zero of the augmented Čech complex is the ring of functions on the covered domain. -/
-noncomputable def augmentedCechComplexDegreeZeroIso
+noncomputable def augmentedCechComplexDegreeZeroIso (hA : IsAffinoidAlgebra K A)
     {U : AffinoidRationalSubdomain K A} (𝒰 : Cover K A U) :
-    (𝒰.augmentedCechComplex K A).X 0 ≅ ModuleCat.of K U.Sections := sorry
+    (𝒰.augmentedCechComplex K A hA).X 0 ≅ ModuleCat.of K U.Sections := sorry
 
 /-- Tate acyclicity: the augmented Čech complex of every finite rational cover is exact. -/
-theorem tateAcyclicity {U : AffinoidRationalSubdomain K A} (𝒰 : Cover K A U) :
-    (𝒰.augmentedCechComplex K A).Acyclic := sorry
+theorem tateAcyclicity (hA : IsAffinoidAlgebra K A)
+    {U : AffinoidRationalSubdomain K A} (𝒰 : Cover K A U) :
+    (𝒰.augmentedCechComplex K A hA).Acyclic := sorry
 
 end Cover
 
