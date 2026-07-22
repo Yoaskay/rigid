@@ -123,8 +123,10 @@ geometric objects.
    a normed `K`-algebra is automatically relative, so the two spectra are homeomorphic and the
    relative spectrum is nonempty whenever the algebra is nonzero.
 5. Define completed residue fields and evaluation maps. **Done**
-   (`Berkovich/CompletedResidue`): quotient by the prime kernel, extend the valuation to the
-   fraction field, complete, and recover the point seminorm as the norm of evaluation.
+   (`Berkovich/CompletedResidue`, `Berkovich/CompletedResidueFunctoriality`): quotient by the prime
+   kernel, extend the valuation to the fraction field, complete, recover the point seminorm as the
+   norm of evaluation, and construct the isometric maps on completed residues induced by morphisms
+   relating Berkovich points, with identity and composition laws.
 6. Define affinoid domains and analytic functions. The closed compact rational-domain loci and
    denominator nonvanishing for rational data are **done** (`Berkovich/AffinoidDomain`); their
    localization models and analytic function rings remain open.

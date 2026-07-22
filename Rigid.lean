@@ -5,13 +5,14 @@ import Rigid.AffinoidAlgebra.NoetherNormalization
 import Rigid.AffinoidAlgebra.QuotientNorm
 import Rigid.AffinoidAlgebra.QuotientTopology
 import Rigid.AffinoidAlgebra.RationalDatum
-import Rigid.Berkovich.Spectrum
-import Rigid.Berkovich.CompletedResidue
 import Rigid.Berkovich.AffinoidDomain
+import Rigid.Berkovich.CompletedResidue
+import Rigid.Berkovich.CompletedResidueFunctoriality
 import Rigid.Berkovich.GeneralSmoothing
 import Rigid.Berkovich.Nonempty
-import Rigid.Berkovich.RelativeSpectrum
 import Rigid.Berkovich.RelativeNonempty
+import Rigid.Berkovich.RelativeSpectrum
+import Rigid.Berkovich.Spectrum
 import Rigid.Development
 import Rigid.TateAlgebra.Basic
 import Rigid.TateAlgebra.Complete
