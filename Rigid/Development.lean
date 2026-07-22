@@ -1438,11 +1438,15 @@ theorem carrier_inter {X : RigidSpace K} (U V : AdmissibleOpen K X) :
 
 /-- The intersection is contained in its left factor. -/
 theorem inter_subset_left {X : RigidSpace K} (U V : AdmissibleOpen K X) :
-    (inter K U V).carrier ⊆ U.carrier := sorry
+    (inter K U V).carrier ⊆ U.carrier := by
+  rw [carrier_inter]
+  exact Set.inter_subset_left
 
 /-- The intersection is contained in its right factor. -/
 theorem inter_subset_right {X : RigidSpace K} (U V : AdmissibleOpen K X) :
-    (inter K U V).carrier ⊆ V.carrier := sorry
+    (inter K U V).carrier ⊆ V.carrier := by
+  rw [carrier_inter]
+  exact Set.inter_subset_right
 
 /-- A family is an admissible cover of an admissible open in the rigid Grothendieck topology. -/
 def IsCover {X : RigidSpace K} {ι : Type (u + 1)}
@@ -1479,13 +1483,15 @@ theorem iUnion_carrier {X : RigidSpace K} {ι : Type (u + 1)}
 end IsCover
 
 /-- An admissible open is quasi-compact for the admissible topology. -/
-def IsQuasiCompact {X : RigidSpace K} (U : AdmissibleOpen K X) : Prop := sorry
+def IsQuasiCompact {X : RigidSpace K} (U : AdmissibleOpen K X) : Prop :=
+  ∀ {ι : Type (u + 1)} (V : ι → AdmissibleOpen K X), IsCover K V U →
+    ∃ s : Set ι, s.Finite ∧ IsCover K (fun i : s ↦ V i.1) U
 
 /-- Quasi-compactness means that every admissible cover has a finite admissible subcover. -/
 theorem isQuasiCompact_iff {X : RigidSpace K} (U : AdmissibleOpen K X) :
     IsQuasiCompact K U ↔
       ∀ {ι : Type (u + 1)} (V : ι → AdmissibleOpen K X), IsCover K V U →
-        ∃ s : Set ι, s.Finite ∧ IsCover K (fun i : s ↦ V i.1) U := sorry
+        ∃ s : Set ι, s.Finite ∧ IsCover K (fun i : s ↦ V i.1) U := Iff.rfl
 
 end AdmissibleOpen
 
@@ -1644,13 +1650,14 @@ end AffinoidDomain
 
 /-- A family of affinoid domains is an admissible cover. -/
 def IsAdmissibleAffinoidCover {X : RigidSpace K} {ι : Type (u + 1)}
-    (U : ι → AffinoidDomain K X) : Prop := sorry
+    (U : ι → AffinoidDomain K X) : Prop :=
+  AdmissibleOpen.IsCover K (fun i ↦ (U i).toAdmissibleOpen) (AdmissibleOpen.top K X)
 
 /-- Affinoid admissible covers are precisely admissible-open covers of the full space. -/
 theorem isAdmissibleAffinoidCover_iff {X : RigidSpace K} {ι : Type (u + 1)}
     (U : ι → AffinoidDomain K X) :
     IsAdmissibleAffinoidCover K U ↔
-      AdmissibleOpen.IsCover K (fun i ↦ (U i).toAdmissibleOpen) (AdmissibleOpen.top K X) := sorry
+      AdmissibleOpen.IsCover K (fun i ↦ (U i).toAdmissibleOpen) (AdmissibleOpen.top K X) := Iff.rfl
 /-- An admissible affinoid cover of a rigid space. -/
 structure AffinoidCover (X : RigidSpace K) : Type (u + 2) where
   /-- The indexing type of the cover. -/
@@ -1680,10 +1687,14 @@ end AffinoidCover
 def IsClosedImmersion {X Y : RigidSpace K} (f : X ⟶ Y) : Prop := sorry
 
 /-- Every point has an admissible affinoid neighborhood. -/
-def IsLocallyAffinoid (X : RigidSpace K) : Prop := sorry
+def IsLocallyAffinoid (X : RigidSpace K) : Prop :=
+  ∀ x : Point K X, ∃ U : AffinoidDomain K X, x ∈ U.carrier
 
 /-- Intersections of quasi-compact admissible opens are quasi-compact. -/
-def IsQuasiSeparated (X : RigidSpace K) : Prop := sorry
+def IsQuasiSeparated (X : RigidSpace K) : Prop :=
+  ∀ U V : AffinoidDomain K X,
+    AdmissibleOpen.IsQuasiCompact K
+      (AdmissibleOpen.inter K U.toAdmissibleOpen V.toAdmissibleOpen)
 
 /-- The rigid space has an admissible affinoid cover of finite type. -/
 def HasAffinoidCoverOfFiniteType (X : RigidSpace K) : Prop :=
@@ -1693,20 +1704,21 @@ def HasAffinoidCoverOfFiniteType (X : RigidSpace K) : Prop :=
 abbrev IsParacompact (X : RigidSpace K) : Prop := HasAffinoidCoverOfFiniteType K X
 
 /-- The diagonal is a closed immersion. -/
-def IsSeparated (X : RigidSpace K) : Prop := sorry
+def IsSeparated (X : RigidSpace K) : Prop :=
+  IsClosedImmersion K (CategoryTheory.Limits.prod.lift (𝟙 X) (𝟙 X))
 
 /-- Every rigid analytic space is locally affinoid by definition. -/
 theorem isLocallyAffinoid (X : RigidSpace K) : IsLocallyAffinoid K X := sorry
 
 /-- Local affinoidness is characterized by affinoid domains through every point. -/
 theorem isLocallyAffinoid_iff (X : RigidSpace K) :
-    IsLocallyAffinoid K X ↔ ∀ x : Point K X, ∃ U : AffinoidDomain K X, x ∈ U.carrier := sorry
+    IsLocallyAffinoid K X ↔ ∀ x : Point K X, ∃ U : AffinoidDomain K X, x ∈ U.carrier := Iff.rfl
 
 /-- Quasi-separatedness is characterized by quasi-compact intersections of affinoid domains. -/
 theorem isQuasiSeparated_iff (X : RigidSpace K) :
     IsQuasiSeparated K X ↔ ∀ U V : AffinoidDomain K X,
       AdmissibleOpen.IsQuasiCompact K
-        (AdmissibleOpen.inter K U.toAdmissibleOpen V.toAdmissibleOpen) := sorry
+        (AdmissibleOpen.inter K U.toAdmissibleOpen V.toAdmissibleOpen) := Iff.rfl
 
 /-- The comparison finiteness condition is witnessed by an affinoid cover of finite type. -/
 theorem isParacompact_iff (X : RigidSpace K) :
@@ -1715,7 +1727,7 @@ theorem isParacompact_iff (X : RigidSpace K) :
 /-- Separatedness is characterized by the diagonal being a closed immersion. -/
 theorem isSeparated_iff (X : RigidSpace K) :
     IsSeparated K X ↔ IsClosedImmersion K
-      (CategoryTheory.Limits.prod.lift (𝟙 X) (𝟙 X)) := sorry
+      (CategoryTheory.Limits.prod.lift (𝟙 X) (𝟙 X)) := Iff.rfl
 
 /-- Local affinoidness is invariant under analytic isomorphism. -/
 theorem isLocallyAffinoid_iff_of_iso {X Y : RigidSpace K} (e : X ≅ Y) :
