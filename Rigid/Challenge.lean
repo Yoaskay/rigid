@@ -666,6 +666,36 @@ namespace RigidSpace
 /-- The type of analytic points of a rigid space. -/
 def Point (X : RigidSpace K) : Type (u + 1) := sorry
 
+namespace Point
+
+/-- The map on analytic points induced by a rigid-space morphism. -/
+noncomputable def map {X Y : RigidSpace K} (f : X ⟶ Y) : Point K X → Point K Y := sorry
+
+@[simp]
+theorem map_id (X : RigidSpace K) : map K (𝟙 X) = id := sorry
+
+@[simp]
+theorem map_comp {X Y Z : RigidSpace K} (f : X ⟶ Y) (g : Y ⟶ Z) :
+    map K (f ≫ g) = map K g ∘ map K f := sorry
+
+/-- An analytic isomorphism induces an equivalence on points. -/
+noncomputable def equivOfIso {X Y : RigidSpace K} (e : X ≅ Y) : Point K X ≃ Point K Y where
+  toFun := map K e.hom
+  invFun := map K e.inv
+  left_inv x := by
+    simpa [Function.comp_apply] using congr_fun (map_comp K e.hom e.inv).symm x
+  right_inv x := by
+    simpa [Function.comp_apply] using congr_fun (map_comp K e.inv e.hom).symm x
+
+end Point
+
+/-- The functor assigning to a rigid space its type of analytic points. -/
+noncomputable def pointFunctor : RigidSpace K ⥤ Type (u + 1) where
+  obj X := Point K X
+  map f := TypeCat.ofHom (Point.map K f)
+  map_id X := by apply TypeCat.homEquiv.injective; exact Point.map_id K X
+  map_comp f g := by apply TypeCat.homEquiv.injective; exact Point.map_comp K f g
+
 /-- An admissible open of a rigid space. -/
 def AdmissibleOpen (X : RigidSpace K) : Type (u + 1) := sorry
 
@@ -837,6 +867,48 @@ def Point (X : BerkovichSpace K) : Type (u + 1) := sorry
 /-- The canonical topology on the points of a Berkovich space. -/
 noncomputable instance pointTopologicalSpace (X : BerkovichSpace K) :
     TopologicalSpace (Point K X) := sorry
+
+namespace Point
+
+/-- The map on points induced by a morphism of Berkovich spaces. -/
+noncomputable def map {X Y : BerkovichSpace K} (f : X ⟶ Y) : Point K X → Point K Y := sorry
+
+/-- The map on points induced by an analytic morphism is continuous. -/
+theorem continuous_map {X Y : BerkovichSpace K} (f : X ⟶ Y) : Continuous (map K f) := sorry
+
+@[simp]
+theorem map_id (X : BerkovichSpace K) : map K (𝟙 X) = id := sorry
+
+@[simp]
+theorem map_comp {X Y Z : BerkovichSpace K} (f : X ⟶ Y) (g : Y ⟶ Z) :
+    map K (f ≫ g) = map K g ∘ map K f := sorry
+
+/-- An analytic isomorphism induces a homeomorphism on underlying point spaces. -/
+noncomputable def homeomorphOfIso {X Y : BerkovichSpace K} (e : X ≅ Y) :
+    Point K X ≃ₜ Point K Y where
+  toFun := map K e.hom
+  invFun := map K e.inv
+  left_inv x := by
+    simpa [Function.comp_apply] using congr_fun (map_comp K e.hom e.inv).symm x
+  right_inv x := by
+    simpa [Function.comp_apply] using congr_fun (map_comp K e.inv e.hom).symm x
+  continuous_toFun := continuous_map K e.hom
+  continuous_invFun := continuous_map K e.inv
+
+end Point
+
+/-- The functor assigning to a Berkovich space its underlying topological space. -/
+noncomputable def pointFunctor : BerkovichSpace K ⥤ TopCat.{u + 1} where
+  obj X := TopCat.of (Point K X)
+  map f := TopCat.ofHom (ContinuousMap.mk (Point.map K f) (Point.continuous_map K f))
+  map_id X := by
+    apply TopCat.hom_ext
+    ext x
+    exact congr_fun (Point.map_id K X) x
+  map_comp f g := by
+    apply TopCat.hom_ext
+    ext x
+    exact congr_fun (Point.map_comp K f g) x
 
 /-- An affinoid domain in a Berkovich space. -/
 def AffinoidDomain (X : BerkovichSpace K) : Type (u + 1) := sorry
