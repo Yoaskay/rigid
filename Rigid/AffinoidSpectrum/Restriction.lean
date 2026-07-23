@@ -4,7 +4,6 @@ import Rigid.AffinoidSpectrum.RationalBasis
 import Rigid.Berkovich.Unit
 
 set_option linter.style.header false
-set_option linter.unusedSectionVars false
 
 /-!
 # Restriction between rational subdomains
@@ -47,7 +46,7 @@ theorem ambientPoint_mem_carrier (U : AffinoidRationalSubdomain K A)
     BerkovichSpectrumOver.map_mul]
   exact mul_le_of_le_one_right
     (BerkovichSpectrumOver.nonneg K U.Sections y _)
-    (IsPowerBounded.apply_le_one K y
+    (BerkovichSpectrumOver.apply_le_one_of_isPowerBounded K U.Sections y
       (RationalLocalization.isPowerBounded_coordinate K A U.n U.g U.f i))
 
 /-- If `U ⊆ V`, the denominator defining `V` is invertible on the section algebra of `U`. -/

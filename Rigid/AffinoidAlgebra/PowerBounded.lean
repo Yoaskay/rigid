@@ -2,7 +2,6 @@ import Mathlib.Analysis.Normed.Group.Ultra
 import Mathlib.Analysis.Normed.Operator.Banach
 import Mathlib.RingTheory.IntegralClosure.IsIntegral.Basic
 import Rigid.AffinoidAlgebra.RationalDatum
-import Rigid.Berkovich.RelativeSpectrum
 
 set_option linter.style.header false
 
@@ -193,25 +192,5 @@ theorem IsPowerBounded.map_continuousAlgHom (φ : ContinuousAlgHom K A B) {x : A
     _ ≤ max ‖(1 : B)‖ (C * M) := le_max_right _ _
 
 end ContinuousAlgHom
-
-section BerkovichSpectrumOver
-
-variable {B : Type u} [NormedCommRing B]
-
-/-- A power-bounded element has value at most one at every relative Berkovich point. -/
-theorem IsPowerBounded.apply_le_one
-    (K : Type v) [NormedField K] [Algebra K B]
-    (x : BerkovichSpectrumOver K B) {b : B} (hb : IsPowerBounded b) : x b ≤ 1 := by
-  rcases hb with ⟨C, hC⟩
-  by_contra h
-  have hxb : 1 < x b := lt_of_not_ge h
-  obtain ⟨n, hn⟩ := pow_unbounded_of_one_lt C hxb
-  apply not_le_of_gt hn
-  calc
-    x b ^ n = x (b ^ n) := (map_pow x.toBerkovichSpectrum.seminorm b n).symm
-    _ ≤ ‖b ^ n‖ := BerkovichSpectrumOver.le_norm K B x _
-    _ ≤ C := hC ⟨n, rfl⟩
-
-end BerkovichSpectrumOver
 
 end Rigid

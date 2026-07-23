@@ -26,6 +26,7 @@ variable (K : Type u) [NontriviallyNormedField K] [CompleteSpace K] [IsUltrametr
 variable {A : Type v} [NormedCommRing A] [NormedAlgebra K A] [CompleteSpace A]
   [IsUltrametricDist A]
 
+omit [CompleteSpace A] [IsUltrametricDist A] in
 /-- Affinoid algebras are Noetherian, recorded in the production namespace. -/
 theorem isNoetherianRing_of_affinoidAlgebra (hA : IsAffinoidAlgebra K A) :
     IsNoetherianRing A := by

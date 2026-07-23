@@ -546,6 +546,7 @@ private theorem succMap_tateVariable (n : ℕ) (i : Fin n) :
     (MvPowerSeries.X i.succ : MvPowerSeries (Fin (n + 1)) K)
   simp
 
+omit [CompleteSpace K] in
 /-- The remaining-variable inclusion preserves the Gauss norm. -/
 private theorem norm_succMap_eq (n : ℕ) (a : TateAlgebra K (Fin n)) :
     ‖succMap K n a‖ = ‖a‖ := by

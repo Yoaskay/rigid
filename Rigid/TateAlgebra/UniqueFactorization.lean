@@ -25,6 +25,7 @@ namespace TateAlgebra
 
 variable (K : Type u) [NontriviallyNormedField K] [CompleteSpace K] [IsUltrametricDist K]
 
+omit [CompleteSpace K] in
 /-- A monic polynomial whose first-variable image is a Weierstrass unit has degree zero. -/
 theorem natDegree_eq_zero_of_isUnit_firstVariablePolynomialMap {n d : ℕ}
     {p : Polynomial (TateAlgebra K (Fin n))}

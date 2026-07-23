@@ -11,7 +11,6 @@ import Rigid.TateAlgebra.Domain
 import Rigid.TateAlgebra.UniqueFactorization
 
 set_option linter.style.header false
-set_option linter.unusedSectionVars false
 
 /-!
 # Spectral polynomial relations
@@ -174,6 +173,7 @@ section Normed
 
 variable [NormedRing R] [NormOneClass R] [Nontrivial R]
 
+omit [Nontrivial R] in
 /-- The coefficient bound direction of `Polynomial.spectralValue_le_one_iff` needs no division
 in the coefficient ring. -/
 theorem norm_coeff_le_one_of_spectralValue_le_one {P : R[X]} (hP : P.Monic)
@@ -189,6 +189,7 @@ theorem norm_coeff_le_one_of_spectralValue_le_one {P : R[X]} (hP : P.Monic)
 
 variable {D : Type v} [NormedRing D] [Nontrivial D]
 
+omit [NormOneClass R] [Nontrivial R] in
 /-- Spectral value does not increase when the coefficients are mapped by a norm-nonincreasing
 ring homomorphism. -/
 theorem spectralValue_map_le (f : R →+* D) (hf : ∀ r, ‖f r‖ ≤ ‖r‖)
@@ -209,6 +210,7 @@ theorem spectralValue_map_le (f : R →+* D) (hf : ∀ r, ‖f r‖ ≤ ‖r‖)
     _ ≤ ⨆ n, spectralValueTerms P n :=
       le_ciSup (spectralValueTerms_bddAbove P) n
 
+omit [NormOneClass R] [Nontrivial R] in
 /-- An isometric coefficient map preserves spectral value. -/
 theorem spectralValue_map_eq (f : R →+* D) (hf : ∀ r, ‖f r‖ = ‖r‖)
     {P : R[X]} (hP : P.Monic) : spectralValue (P.map f) = spectralValue P := by
@@ -323,6 +325,7 @@ variable [CompleteSpace K]
 variable {C : Type v}
 variable [NormedCommRing C] [NormedAlgebra K C] [CompleteSpace C] [IsUltrametricDist C]
 
+omit [CompleteSpace K] [CompleteSpace C] [IsUltrametricDist C] in
 /-- Componentwise unit-ball relations over one continuous Tate-algebra map combine into the
 integral certificate used by Proposition 4.5.12. -/
 theorem hasUnitBallIntegralCertificate_of_minimalPrime_quotients
@@ -349,6 +352,7 @@ noncomputable def gaussAlgebraicClosureMap (n : ℕ) :
   (algebraMap (GaussResidueField K n) (GaussAlgebraicClosure K n)).comp
     (BerkovichSpectrumOver.completedResidueMap (TateAlgebra.gaussPoint K n))
 
+omit [CompleteSpace K] in
 @[simp]
 theorem spectralNorm_gaussAlgebraicClosureMap (n : ℕ) (a : TateAlgebra K (Fin n)) :
     spectralNorm (GaussResidueField K n) (GaussAlgebraicClosure K n)
@@ -356,6 +360,7 @@ theorem spectralNorm_gaussAlgebraicClosureMap (n : ℕ) (a : TateAlgebra K (Fin 
   rw [gaussAlgebraicClosureMap, RingHom.comp_apply, spectralNorm_extends,
     BerkovichSpectrumOver.norm_completedResidueMap, TateAlgebra.gaussPoint_apply]
 
+omit [CompleteSpace K] in
 /-- Evaluation in the completed Gauss residue field, and hence in its algebraic closure, is
 injective. -/
 theorem gaussAlgebraicClosureMap_injective (n : ℕ) :
@@ -365,6 +370,7 @@ theorem gaussAlgebraicClosureMap_injective (n : ℕ) :
   apply norm_eq_zero.mp
   rw [← spectralNorm_gaussAlgebraicClosureMap K n a, ha, spectralNorm_zero]
 
+omit [CompleteSpace K] [NormedAlgebra K C] [CompleteSpace C] [IsUltrametricDist C] in
 /-- A monic polynomial annihilating an element of a nontrivial algebra has positive degree. -/
 theorem natDegree_pos_of_monic_relation [Nontrivial C] {n : ℕ}
     (π : TateAlgebra K (Fin n) →+* C) (c : C)
@@ -376,6 +382,7 @@ theorem natDegree_pos_of_monic_relation [Nontrivial C] {n : ℕ}
   have hdeg := Polynomial.natDegree_pos_of_monic_of_aeval_eq_zero (hP.map π) hroot
   rwa [hP.natDegree_map] at hdeg
 
+omit [CompleteSpace K] in
 /-- The root-theoretic part of Lemma 4.5.11 and Proposition 4.5.7.  A positive-degree monic
 polynomial over a Tate algebra has a root over the completed Gauss residue field whose extended
 norm is exactly its spectral value.  This is the existing nonarchimedean norm-extension theorem
@@ -464,6 +471,7 @@ noncomputable def gaussMaxRoot {n : ℕ} {P : (TateAlgebra K (Fin n))[X]}
     (hP : P.Monic) (hPdeg : 0 < P.natDegree) : GaussAlgebraicClosure K n :=
   Classical.choose (exists_gaussRoot_spectralNorm_eq_spectralValue K hP hPdeg)
 
+omit [CompleteSpace K] in
 @[simp]
 theorem aeval_gaussMaxRoot {n : ℕ} {P : (TateAlgebra K (Fin n))[X]}
     (hP : P.Monic) (hPdeg : 0 < P.natDegree) :
@@ -471,6 +479,7 @@ theorem aeval_gaussMaxRoot {n : ℕ} {P : (TateAlgebra K (Fin n))[X]}
       (P.map (gaussAlgebraicClosureMap K n)) = 0 :=
   (Classical.choose_spec (exists_gaussRoot_spectralNorm_eq_spectralValue K hP hPdeg)).1
 
+omit [CompleteSpace K] in
 @[simp]
 theorem eval₂_gaussMaxRoot {n : ℕ} {P : (TateAlgebra K (Fin n))[X]}
     (hP : P.Monic) (hPdeg : 0 < P.natDegree) :
@@ -478,6 +487,7 @@ theorem eval₂_gaussMaxRoot {n : ℕ} {P : (TateAlgebra K (Fin n))[X]}
   simpa only [Polynomial.aeval_def, Polynomial.eval₂_map, Algebra.algebraMap_self,
     RingHom.id_comp] using aeval_gaussMaxRoot K hP hPdeg
 
+omit [CompleteSpace K] in
 @[simp]
 theorem spectralNorm_gaussMaxRoot {n : ℕ} {P : (TateAlgebra K (Fin n))[X]}
     (hP : P.Monic) (hPdeg : 0 < P.natDegree) :
@@ -494,6 +504,7 @@ noncomputable def gaussRootLift {n : ℕ} (P : (TateAlgebra K (Fin n))[X])
     simpa only [Polynomial.aeval_def, Polynomial.eval₂_map, Algebra.algebraMap_self,
       RingHom.id_comp] using hz)
 
+omit [CompleteSpace K] in
 @[simp]
 theorem gaussRootLift_root {n : ℕ} (P : (TateAlgebra K (Fin n))[X])
     (z : GaussAlgebraicClosure K n)
@@ -565,6 +576,7 @@ noncomputable def integralMinimalPolynomial {n : ℕ}
   letI : Algebra (TateAlgebra K (Fin n)) C := π.toRingHom.toAlgebra
   minpoly (TateAlgebra K (Fin n)) c
 
+omit [CompleteSpace K] [CompleteSpace C] [IsUltrametricDist C] in
 /-- Finiteness makes the integral minimal polynomial monic. -/
 theorem integralMinimalPolynomial_monic {n : ℕ}
     (π : TateAlgebra K (Fin n) →ₐ[K] C) (hπfinite : π.Finite) (c : C) :
@@ -575,6 +587,7 @@ theorem integralMinimalPolynomial_monic {n : ℕ}
   change (minpoly A c).Monic
   exact minpoly.monic (IsIntegral.of_finite A c)
 
+omit [CompleteSpace K] [CompleteSpace C] [IsUltrametricDist C] in
 /-- The integral minimal polynomial annihilates the original element. -/
 theorem eval₂_integralMinimalPolynomial {n : ℕ}
     (π : TateAlgebra K (Fin n) →ₐ[K] C) (c : C) :
@@ -584,6 +597,7 @@ theorem eval₂_integralMinimalPolynomial {n : ℕ}
   change Polynomial.eval₂ (algebraMap A C) c (minpoly A c) = 0
   simpa only [Polynomial.aeval_def] using minpoly.aeval A c
 
+omit [CompleteSpace C] [IsUltrametricDist C] in
 /-- Lemma 4.5.5 over an integrally closed base: the integral minimal polynomial becomes the field
 minimal polynomial after passing to fraction fields. -/
 theorem isFractionMinpoly_integralMinimalPolynomial [IsDomain C] {n : ℕ}
@@ -604,6 +618,7 @@ theorem isFractionMinpoly_integralMinimalPolynomial [IsDomain C] {n : ℕ}
   exact (minpoly.isIntegrallyClosed_eq_field_fractions
     (R := A) (S := C) (FractionRing A) (FractionRing C) (IsIntegral.of_finite A c)).symm
 
+omit [CompleteSpace K] [CompleteSpace C] [IsUltrametricDist C] in
 /-- A relation identified with the fraction-field minimal polynomial annihilates the maximal
 Gauss root. -/
 theorem hasFractionMinpolyGaussRoot_of_isFractionMinpoly [IsDomain C] {n : ℕ}
@@ -636,6 +651,7 @@ theorem hasFractionMinpolyGaussRoot_of_isFractionMinpoly [IsDomain C] {n : ℕ}
   rw [← hmin, Polynomial.eval₂_map, hcomp]
   exact eval₂_gaussMaxRoot K hP hPdeg
 
+omit [IsUltrametricDist C] in
 /-- Once the fraction-field minimal-polynomial identity is known, the Gauss-root functional is
 automatic: extend evaluation linearly and apply the finite-module open-mapping theorem. -/
 theorem hasBoundedGaussMaxRootFunctional_of_fractionMinpolyRoot [IsDomain C] {n : ℕ}
@@ -686,6 +702,7 @@ theorem hasBoundedGaussMaxRootFunctional_of_fractionMinpolyRoot [IsDomain C] {n 
       (gaussMaxRoot K hP hPdeg) hroot'
   exact ⟨G, M, hM, hGpow, hG⟩
 
+omit [CompleteSpace K] [NormedAlgebra K C] [CompleteSpace C] [IsUltrametricDist C] in
 /-- A bounded functional for the chosen maximal root packages the bounded root realization. -/
 theorem hasBoundedGaussRootRealization_of_maxRootFunctional {n : ℕ} (c : C)
     {P : (TateAlgebra K (Fin n))[X]} (hP : P.Monic) (hPdeg : 0 < P.natDegree)
@@ -695,6 +712,7 @@ theorem hasBoundedGaussRootRealization_of_maxRootFunctional {n : ℕ} (c : C)
   exact ⟨gaussMaxRoot K hP hPdeg, aeval_gaussMaxRoot K hP hPdeg,
     spectralNorm_gaussMaxRoot K hP hPdeg, F, M, hM, hFpow, hFbound⟩
 
+omit [CompleteSpace K] [NormedAlgebra K C] [CompleteSpace C] [IsUltrametricDist C] in
 /-- A bounded Gauss-root realization supplies the difficult inequality in Proposition 4.5.7. -/
 theorem spectralValue_le_spectralRadius_of_boundedGaussRootRealization [Nontrivial C]
     {n : ℕ} (c : C) {P : (TateAlgebra K (Fin n))[X]}
@@ -708,6 +726,7 @@ theorem spectralValue_le_spectralRadius_of_boundedGaussRootRealization [Nontrivi
   rw [← hz]
   exact norm_le_spectralRadius_of_bounded_power_realization c z F M hM hFpow hbound
 
+omit [CompleteSpace K] [CompleteSpace C] in
 /-- Any continuous monic Tate-algebra relation gives the standard upper bound
 `ρ(c) ≤ σ(P)`.  The proof evaluates at a Berkovich point attaining the spectral radius, passes to
 its completed residue field, and applies Mathlib's nonarchimedean root bound there.  Continuity is
@@ -728,7 +747,7 @@ theorem spectralRadius_le_spectralValue_of_relation [Nontrivial C] {n : ℕ}
   have hφ (a : TateAlgebra K (Fin n)) : ‖φ a‖ ≤ ‖a‖ := by
     change ‖BerkovichSpectrumOver.completedResidueMap y (π a)‖ ≤ ‖a‖
     rw [BerkovichSpectrumOver.norm_completedResidueMap]
-    exact BerkovichSpectrumOver.le_norm K _ 
+    exact BerkovichSpectrumOver.le_norm K _
       (BerkovichSpectrumOver.comapContinuous K _ πcont y) a
   have hz : Polynomial.aeval z (P.map φ) = 0 := by
     have hmap := congrArg (BerkovichSpectrumOver.completedResidueMap y) hPeval
@@ -767,6 +786,7 @@ def HasSharpSpectralPolynomial (n : ℕ) (π : TateAlgebra K (Fin n) →ₐ[K] C
   ∃ P : (TateAlgebra K (Fin n))[X], P.Monic ∧ Polynomial.eval₂ π.toRingHom c P = 0 ∧
     BerkovichSpectrum.spectralRadius C c = spectralValue P
 
+omit [CompleteSpace K] [CompleteSpace C] in
 /-- Proposition 4.5.7 reduced to its finite-module functional: the usual root bound gives one
 inequality, while a bounded realization of the maximal Gauss root gives the other. -/
 theorem hasSharpSpectralPolynomial_of_boundedGaussRootRealization [Nontrivial C] {n : ℕ}
@@ -779,6 +799,7 @@ theorem hasSharpSpectralPolynomial_of_boundedGaussRootRealization [Nontrivial C]
     (spectralRadius_le_spectralValue_of_relation K π hπ c hPmonic hPeval) ?_⟩
   exact spectralValue_le_spectralRadius_of_boundedGaussRootRealization K c hroot
 
+omit [CompleteSpace K] [CompleteSpace C] in
 /-- Domain-case Proposition 4.5.7 with only its final bounded-functional input exposed. -/
 theorem hasSharpSpectralPolynomial_of_maxRootFunctional [Nontrivial C] {n : ℕ}
     (π : TateAlgebra K (Fin n) →ₐ[K] C) (hπ : Continuous π)
@@ -824,6 +845,7 @@ def HasGaussFiberMaximum {n : ℕ} (π : TateAlgebra K (Fin n) →ₐ[K] C) (c :
   ∃ y : BerkovichSpectrumOver K C,
     (∀ a, y (π a) = ‖a‖) ∧ y c = spectralValue P
 
+omit [CompleteSpace K] [CompleteSpace C] in
 /-- The standard upper bound together with the finite-fiber maximum gives the sharp equality of
 Proposition 4.5.7. -/
 theorem hasSharpSpectralPolynomial_of_gaussFiberMaximum [Nontrivial C] {n : ℕ}
@@ -837,6 +859,7 @@ theorem hasSharpSpectralPolynomial_of_gaussFiberMaximum [Nontrivial C] {n : ℕ}
   rw [← hy]
   exact BerkovichSpectrumOver.le_spectralRadius K C y c
 
+omit [CompleteSpace K] [CompleteSpace C] [IsUltrametricDist C] in
 /-- A sharp spectral polynomial for an element in the closed spectral unit ball has all its
 coefficients in the Gauss unit ball. -/
 theorem hasUnitBallRelation_of_hasSharpSpectralPolynomial {n : ℕ}
@@ -851,6 +874,7 @@ theorem hasUnitBallRelation_of_hasSharpSpectralPolynomial {n : ℕ}
   apply norm_coeff_le_one_of_spectralValue_le_one hPmonic
   rwa [← hsharp]
 
+omit [CompleteSpace K] [CompleteSpace C] [IsUltrametricDist C] in
 /-- Proposition 4.5.3 immediately supplies the certificate used in Proposition 4.5.12. -/
 theorem hasUnitBallIntegralCertificate_of_hasSharpSpectralPolynomial {n : ℕ}
     (π : TateAlgebra K (Fin n) →ₐ[K] C) (hπ : Continuous π) (c : C)
@@ -883,6 +907,7 @@ theorem hasSharpNoetherNormalization_of_isAffinoidAlgebra_of_isDomain [IsDomain 
     hasSharpSpectralPolynomial_of_integrallyClosedNormalization K π
       hπinj hπfinite hπcont⟩
 
+omit [CompleteSpace K] [CompleteSpace C] [IsUltrametricDist C] in
 /-- Sharp spectral polynomials over one Noether normalization imply the boundary case in the
 power-boundedness criterion. -/
 theorem hasPowerBoundedSpectralCriterion_of_hasSharpNoetherNormalization [Nontrivial C]
@@ -892,6 +917,7 @@ theorem hasPowerBoundedSpectralCriterion_of_hasSharpNoetherNormalization [Nontri
   obtain ⟨n, π, -, -, hπ, hsharp⟩ := hC
   exact hasUnitBallIntegralCertificate_of_hasSharpSpectralPolynomial K π hπ c hc (hsharp c)
 
+omit [CompleteSpace K] [CompleteSpace C] [IsUltrametricDist C] in
 /-- The non-domain form of Proposition 4.5.3 reduced to its componentwise input.  All minimal
 prime components must use one continuous Tate-algebra coefficient map; the algebraic
 minimal-prime argument then removes the nilpotent error. -/

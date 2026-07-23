@@ -19,8 +19,8 @@ import Rigid.AffinoidAlgebra.RationalLocalization
 import Rigid.AffinoidAlgebra.RationalRestriction
 import Rigid.AffinoidAlgebra.RelativeTate
 import Rigid.AffinoidAlgebra.ResidueNorm
-import Rigid.AffinoidAlgebra.SpectralCriterion
 import Rigid.AffinoidAlgebra.SpectralComponents
+import Rigid.AffinoidAlgebra.SpectralCriterion
 import Rigid.AffinoidAlgebra.SpectralPolynomial
 import Rigid.AffinoidAlgebra.SpectralPresentation
 import Rigid.AffinoidAlgebra.SpectralRadius

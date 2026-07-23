@@ -1,7 +1,6 @@
 import Rigid.AffinoidSpectrum.RationalCover
 
 set_option linter.style.header false
-set_option linter.unusedSectionVars false
 
 open scoped BigOperators
 

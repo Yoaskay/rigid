@@ -3,7 +3,6 @@ import Mathlib.Analysis.Normed.Group.Quotient
 import Rigid.Berkovich.RelativeNonempty
 
 set_option linter.style.header false
-set_option linter.unusedSectionVars false
 
 /-!
 # Detecting units on the Berkovich spectrum
@@ -23,6 +22,7 @@ variable (A : Type v) [NormedCommRing A] [NormedAlgebra K A] [CompleteSpace A]
 
 namespace BerkovichSpectrumOver
 
+omit [CompleteSpace A] in
 /-- A unit has nonzero value at every relative Berkovich point. -/
 theorem apply_ne_zero_of_isUnit {a : A} (ha : IsUnit a)
     (x : BerkovichSpectrumOver K A) : x a ≠ 0 := by

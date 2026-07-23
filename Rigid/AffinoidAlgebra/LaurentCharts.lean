@@ -1,7 +1,6 @@
 import Rigid.AffinoidAlgebra.RationalLocalization
 
 set_option linter.style.header false
-set_option linter.unusedSectionVars false
 
 /-!
 # The analytic maps in a two-member Laurent cover

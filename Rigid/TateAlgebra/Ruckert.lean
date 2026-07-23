@@ -24,6 +24,7 @@ namespace TateAlgebra
 
 variable (K : Type u) [NontriviallyNormedField K] [CompleteSpace K] [IsUltrametricDist K]
 
+omit [CompleteSpace K] in
 private theorem isWeierstrass_ne_zero {n d : ℕ}
     {w : TateAlgebra K (Fin (n + 1))} (hw : IsWeierstrassOfDegree d w) : w ≠ 0 := by
   intro h
@@ -31,6 +32,7 @@ private theorem isWeierstrass_ne_zero {n d : ℕ}
   rw [h, norm_zero] at hnorm
   norm_num at hnorm
 
+omit [CompleteSpace K] in
 /-- The first coordinate of the leading exponent of a first-variable polynomial is at most its
 polynomial degree. -/
 theorem leadingDegree_zero_le_natDegree_firstVariablePolynomialMap {n : ℕ}
@@ -55,12 +57,13 @@ theorem leadingDegree_zero_le_natDegree_firstVariablePolynomialMap {n : ℕ}
   rw [leadingCoeff, hcoeffzero, norm_zero] at hnorm
   exact (norm_pos_iff.mpr hmap).ne' hnorm.symm
 
+omit [CompleteSpace K] in
 /-- A polynomial of degree below a Weierstrass polynomial cannot become a nonzero multiple of
 that Weierstrass element in the Tate algebra. -/
 theorem eq_zero_of_natDegree_lt_of_firstVariablePolynomialMap_dvd_weierstrass
     {n d : ℕ} {W r : Polynomial (TateAlgebra K (Fin n))}
     {w : TateAlgebra K (Fin (n + 1))}
-    (hW : Polynomial.IsMonicOfDegree W d)
+    (_hW : Polynomial.IsMonicOfDegree W d)
     (hw : IsWeierstrassOfDegree d w)
     (hWw : firstVariablePolynomialMap K n W = w)
     (hrdeg : r.natDegree < d)
@@ -92,6 +95,7 @@ noncomputable def weierstrassQuotientMap {n : ℕ}
       TateAlgebra K (Fin (n + 1)) ⧸ Ideal.span ({w} : Set (TateAlgebra K (Fin (n + 1)))) :=
   (Ideal.Quotient.mk _).comp (firstVariablePolynomialMap K n)
 
+omit [CompleteSpace K] in
 theorem ker_weierstrassQuotientMap {n d : ℕ}
     {W : Polynomial (TateAlgebra K (Fin n))}
     {w : TateAlgebra K (Fin (n + 1))}

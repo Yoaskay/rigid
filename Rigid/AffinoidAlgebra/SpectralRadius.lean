@@ -2,13 +2,12 @@ import Rigid.AffinoidAlgebra.MaximumModulus
 import Rigid.Berkovich.SpectralRadius
 
 set_option linter.style.header false
-set_option linter.unusedSectionVars false
 
 /-!
 # Spectral radius and power-bounded elements
 
 This file formalizes the analytic part of Proposition 4.5.12 from the cited draft.  In every
-Banach algebra, power-bounded elements have spectral radius at most one, and spectral radius
+normed algebra, power-bounded elements have spectral radius at most one, and spectral radius
 strictly less than one implies power-boundedness.  The boundary case is reduced to the monic
 unit-ball relation supplied by Noether normalization.  For a Tate algebra that relation is not
 needed: the Gauss point identifies the spectral radius with the Gauss norm directly.
@@ -27,6 +26,7 @@ variable {B : Type v} [NormedCommRing B] [NormedAlgebra K B] [CompleteSpace B]
 
 namespace IsPowerBounded
 
+omit [CompleteSpace B] [IsUltrametricDist B] in
 /-- A power-bounded element has spectral radius at most one. -/
 theorem spectralRadius_le_one [Nontrivial B] {b : B} (hb : IsPowerBounded b) :
     BerkovichSpectrum.spectralRadius B b ≤ 1 := by
@@ -42,6 +42,7 @@ theorem spectralRadius_le_one [Nontrivial B] {b : B} (hb : IsPowerBounded b) :
     _ ≤ ‖b ^ n‖ := BerkovichSpectrum.le_norm B x _
     _ ≤ C := hC ⟨n, rfl⟩
 
+omit [CompleteSpace B] [IsUltrametricDist B] in
 private theorem of_normalizedNorm_pow_lt_one [Nontrivial B] {b : B} {n : ℕ} (hn : 0 < n)
     (hbn : BerkovichSpectrum.normalizedNormSeminorm B (b ^ n) < 1) :
     IsPowerBounded b := by
@@ -73,8 +74,9 @@ private theorem of_normalizedNorm_pow_lt_one [Nontrivial B] {b : B} {n : ℕ} (h
     _ ≤ ‖(1 : B)‖ * D := by simpa using
       mul_le_mul_of_nonneg_left hrem (norm_nonneg (1 : B))
 
-/-- Spectral radius strictly less than one implies power-boundedness in any complete normed
-algebra.  The affinoid input is needed only for the boundary case `ρ = 1`. -/
+omit [CompleteSpace B] [IsUltrametricDist B] in
+/-- Spectral radius strictly less than one implies power-boundedness in any normed algebra.
+The affinoid input is needed only for the boundary case `ρ = 1`. -/
 theorem of_spectralRadius_lt_one [Nontrivial B] {b : B}
     (hb : BerkovichSpectrum.spectralRadius B b < 1) : IsPowerBounded b := by
   have hev : ∀ᶠ n : ℕ in atTop,
@@ -93,6 +95,7 @@ end IsPowerBounded
 
 namespace TateAlgebra
 
+omit [CompleteSpace K] in
 /-- On a strict Tate algebra, the spectral radius is the Gauss norm. -/
 theorem spectralRadius_eq_norm (n : ℕ) (f : TateAlgebra K (Fin n)) :
     BerkovichSpectrum.spectralRadius (TateAlgebra K (Fin n)) f = ‖f‖ := by
@@ -100,6 +103,7 @@ theorem spectralRadius_eq_norm (n : ℕ) (f : TateAlgebra K (Fin n)) :
   · exact BerkovichSpectrum.spectralRadius_le_norm _ f
   · simpa using BerkovichSpectrumOver.le_spectralRadius K _ (gaussPoint K n) f
 
+omit [CompleteSpace K] in
 /-- Proposition 4.5.12(ii) for the Tate-algebra base case. -/
 theorem isPowerBounded_iff_spectralRadius_le_one {n : ℕ} {f : TateAlgebra K (Fin n)} :
     IsPowerBounded f ↔ BerkovichSpectrum.spectralRadius (TateAlgebra K (Fin n)) f ≤ 1 := by
@@ -113,6 +117,7 @@ def HasUnitBallIntegralCertificate (b : B) : Prop :=
   ∃ (n : ℕ) (π : ContinuousAlgHom K (TateAlgebra K (Fin n)) B),
     IsIntegral ((TateAlgebra.unitBallSubring K n).map π.toRingHom) b
 
+omit [CompleteSpace K] [CompleteSpace B] [IsUltrametricDist B] in
 /-- A unit-ball integral certificate implies power-boundedness. -/
 theorem isPowerBounded_of_hasUnitBallIntegralCertificate {b : B}
     (hb : HasUnitBallIntegralCertificate K b) : IsPowerBounded b := by
@@ -123,6 +128,7 @@ theorem isPowerBounded_of_hasUnitBallIntegralCertificate {b : B}
 def HasPowerBoundedSpectralCriterion (B : Type v) [NormedCommRing B] : Prop :=
   ∀ b : B, BerkovichSpectrum.spectralRadius B b ≤ 1 → IsPowerBounded b
 
+omit [CompleteSpace K] [CompleteSpace B] [IsUltrametricDist B] in
 /-- Unit-ball integral certificates for the closed spectral unit ball imply the boundary
 criterion. -/
 theorem hasPowerBoundedSpectralCriterion_of_certificates
@@ -130,6 +136,7 @@ theorem hasPowerBoundedSpectralCriterion_of_certificates
       HasUnitBallIntegralCertificate K b) : HasPowerBoundedSpectralCriterion B :=
   fun b hb ↦ isPowerBounded_of_hasUnitBallIntegralCertificate K (hcertificate b hb)
 
+omit [CompleteSpace K] [CompleteSpace B] [IsUltrametricDist B] in
 /-- The boundary step in Proposition 4.5.12(ii), isolated in the exact form supplied by its
 Noether-normalization proof. -/
 theorem isPowerBounded_iff_spectralRadius_le_one_of_certificate
@@ -141,6 +148,7 @@ theorem isPowerBounded_iff_spectralRadius_le_one_of_certificate
   · exact IsPowerBounded.spectralRadius_le_one
   · exact fun hb ↦ isPowerBounded_of_hasUnitBallIntegralCertificate K (hcertificate b hb)
 
+omit [CompleteSpace B] [IsUltrametricDist B] in
 /-- Once the affinoid boundary criterion is available, power-boundedness is characterized exactly
 by spectral radius at most one. -/
 theorem isPowerBounded_iff_spectralRadius_le_one [Nontrivial B]

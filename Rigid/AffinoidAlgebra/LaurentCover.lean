@@ -2,7 +2,6 @@ import Mathlib.Algebra.Exact.Basic
 import Mathlib.Algebra.Polynomial.Laurent
 
 set_option linter.style.header false
-set_option linter.unusedSectionVars false
 
 /-!
 # The algebraic Laurent-cover exact sequence

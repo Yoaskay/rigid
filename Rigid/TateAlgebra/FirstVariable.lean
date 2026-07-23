@@ -50,7 +50,7 @@ noncomputable def succMap (n : ℕ) :
     rw [mem_cofinite] at hp ⊢
     refine hp.image (Finsupp.embDomain e) |>.subset ?_
     intro x hx
-    simp only [Set.mem_compl_iff, Set.mem_setOf_eq] at hx ⊢
+    simp only [Set.mem_compl_iff] at hx ⊢
     by_cases hxr : x ∈ Set.range (Finsupp.embDomain e)
     · obtain ⟨y, rfl⟩ := hxr
       refine ⟨y, ?_, rfl⟩
@@ -63,6 +63,7 @@ noncomputable def succMap (n : ℕ) :
       · simpa [Finsupp.embDomain_eq_mapDomain] using hxr
   simpa [MvPowerSeries.IsRestricted, Finsupp.prod] using hrename
 
+omit [CompleteSpace K] in
 @[simp]
 theorem succMap_tateVariable (n : ℕ) (i : Fin n) :
     succMap K n (tateVariable K (Fin n) i) = tateVariable K (Fin (n + 1)) i.succ := by
@@ -84,6 +85,7 @@ noncomputable def coeffSlice (n j : ℕ) (f : TateAlgebra K (Fin (n + 1))) :
     exact (tendsto_norm_coeff_zero K (Fin (n + 1)) f).comp
       (Finsupp.cons_right_injective j).tendsto_cofinite⟩
 
+omit [CompleteSpace K] in
 @[simp]
 theorem coeff_coeffSlice (n j : ℕ) (f : TateAlgebra K (Fin (n + 1)))
     (μ : Fin n →₀ ℕ) :
@@ -91,17 +93,20 @@ theorem coeff_coeffSlice (n j : ℕ) (f : TateAlgebra K (Fin (n + 1)))
       MvPowerSeries.coeff (μ.cons j) f.1 :=
   rfl
 
+omit [CompleteSpace K] in
 private theorem monomial_single_zero_eq_tateVariable_pow (n j : ℕ) :
     monomial (Finsupp.single (0 : Fin (n + 1)) j) (1 : K) =
       tateVariable K (Fin (n + 1)) 0 ^ j := by
   apply Subtype.ext
   exact (MvPowerSeries.X_pow_eq (R := K) (0 : Fin (n + 1)) j).symm
 
+omit [CompleteSpace K] in
 private theorem coe_succMap (n : ℕ) (a : TateAlgebra K (Fin n)) :
     ((succMap K n a : TateAlgebra K (Fin (n + 1))) : MvPowerSeries (Fin (n + 1)) K) =
       MvPowerSeries.rename (Fin.succEmb n) a.1 :=
   rfl
 
+omit [CompleteSpace K] in
 theorem coeff_succMap_mul_tateVariable_pow (n j : ℕ)
     (a : TateAlgebra K (Fin n)) (μ : Fin (n + 1) →₀ ℕ) :
     MvPowerSeries.coeff μ
@@ -143,6 +148,7 @@ theorem coeff_succMap_mul_tateVariable_pow (n j : ℕ)
       exact hjμ (Nat.le_antisymm (by simpa [Finsupp.single_le_iff] using hle) hμj)
     · rfl
 
+omit [CompleteSpace K] in
 /-- A series whose first-variable exponents are bounded by `d` is a polynomial of degree less
 than `d` in that variable, with coefficients in the remaining-variable Tate algebra. -/
 theorem eq_sum_succMap_coeffSlice_mul_pow {n d : ℕ}
@@ -186,12 +192,14 @@ noncomputable def firstVariablePolynomialMap (n : ℕ) :
     Polynomial (TateAlgebra K (Fin n)) →+* TateAlgebra K (Fin (n + 1)) :=
   Polynomial.eval₂RingHom (succMap K n).toRingHom (tateVariable K (Fin (n + 1)) 0)
 
+omit [CompleteSpace K] in
 @[simp]
 theorem firstVariablePolynomialMap_monomial (n j : ℕ) (a : TateAlgebra K (Fin n)) :
     firstVariablePolynomialMap K n (Polynomial.monomial j a) =
       succMap K n a * tateVariable K (Fin (n + 1)) 0 ^ j := by
   simp [firstVariablePolynomialMap]
 
+omit [CompleteSpace K] in
 theorem firstVariablePolynomialMap_eq_sum (n : ℕ)
     (p : Polynomial (TateAlgebra K (Fin n))) :
     firstVariablePolynomialMap K n p =
@@ -207,6 +215,7 @@ theorem firstVariablePolynomialMap_eq_sum (n : ℕ)
         succMap K n (p.coeff j) * tateVariable K (Fin (n + 1)) 0 ^ j := by
       simp [firstVariablePolynomialMap]
 
+omit [CompleteSpace K] in
 /-- Coefficients of a first-variable polynomial are read by splitting an exponent into its first
 coordinate and its tail. -/
 theorem coeff_firstVariablePolynomialMap (n : ℕ)
@@ -214,11 +223,6 @@ theorem coeff_firstVariablePolynomialMap (n : ℕ)
     MvPowerSeries.coeff μ (firstVariablePolynomialMap K n p).1 =
       MvPowerSeries.coeff μ.tail (p.coeff (μ 0)).1 := by
   rw [firstVariablePolynomialMap_eq_sum]
-  change MvPowerSeries.coeff μ
-      ((∑ j ∈ Finset.range (p.natDegree + 1),
-        succMap K n (p.coeff j) * tateVariable K (Fin (n + 1)) 0 ^ j :
-          TateAlgebra K (Fin (n + 1))) : MvPowerSeries (Fin (n + 1)) K) =
-    MvPowerSeries.coeff μ.tail (p.coeff (μ 0)).1
   rw [show MvPowerSeries.coeff μ
       ((∑ j ∈ Finset.range (p.natDegree + 1),
         succMap K n (p.coeff j) * tateVariable K (Fin (n + 1)) 0 ^ j :
@@ -246,6 +250,7 @@ theorem coeff_firstVariablePolynomialMap (n : ℕ)
     subst j
     exact hμ (Finset.mem_range.mp hj)
 
+omit [CompleteSpace K] in
 /-- Evaluation in the first Tate variable is injective. -/
 theorem firstVariablePolynomialMap_injective (n : ℕ) :
     Function.Injective (firstVariablePolynomialMap K n) := by
@@ -264,6 +269,7 @@ noncomputable def toFirstVariablePolynomial (n d : ℕ)
     (f : TateAlgebra K (Fin (n + 1))) : Polynomial (TateAlgebra K (Fin n)) :=
   ∑ j ∈ Finset.range d, Polynomial.monomial j (coeffSlice K n j f)
 
+omit [CompleteSpace K] in
 @[simp]
 theorem coeff_toFirstVariablePolynomial (n d j : ℕ)
     (f : TateAlgebra K (Fin (n + 1))) :
@@ -272,6 +278,7 @@ theorem coeff_toFirstVariablePolynomial (n d j : ℕ)
   classical
   simp [toFirstVariablePolynomial, Polynomial.coeff_monomial, eq_comm]
 
+omit [CompleteSpace K] in
 theorem firstVariablePolynomialMap_toFirstVariablePolynomial {n d : ℕ}
     (f : TateAlgebra K (Fin (n + 1)))
     (hf : ∀ μ : Fin (n + 1) →₀ ℕ, d ≤ μ 0 → MvPowerSeries.coeff μ f.1 = 0) :
@@ -288,6 +295,7 @@ noncomputable def weierstrassPolynomial {n d : ℕ} (w : TateAlgebra K (Fin (n +
     Polynomial (TateAlgebra K (Fin n)) :=
   toFirstVariablePolynomial K n (d + 1) w
 
+omit [CompleteSpace K] in
 theorem firstVariablePolynomialMap_weierstrassPolynomial {n d : ℕ}
     {w : TateAlgebra K (Fin (n + 1))} (hw : IsWeierstrassOfDegree d w) :
     firstVariablePolynomialMap K n (weierstrassPolynomial K (d := d) w) = w := by
@@ -299,6 +307,7 @@ theorem firstVariablePolynomialMap_weierstrassPolynomial {n d : ℕ}
     simp at hμ
   · omega
 
+omit [CompleteSpace K] in
 theorem isMonicOfDegree_weierstrassPolynomial {n d : ℕ}
     {w : TateAlgebra K (Fin (n + 1))} (hw : IsWeierstrassOfDegree d w) :
     Polynomial.IsMonicOfDegree (weierstrassPolynomial K (d := d) w) d := by
@@ -328,6 +337,7 @@ theorem isMonicOfDegree_weierstrassPolynomial {n d : ℕ}
       rw [← map_one (algebraMap K (TateAlgebra K (Fin n))), algebraMap_apply,
         TateAlgebra.coeff_C, if_neg hμ]
 
+omit [CompleteSpace K] in
 theorem IsWeierstrassOfDegree.norm_eq_one {n d : ℕ}
     {w : TateAlgebra K (Fin (n + 1))} (hw : IsWeierstrassOfDegree d w) :
     ‖w‖ = 1 := by
@@ -348,6 +358,7 @@ private theorem single_zero_le_of_lex_lt {n d : ℕ} {μ : Fin (n + 1) →₀ �
     have heq := hj 0 h0j
     simpa using heq.le
 
+omit [CompleteSpace K] in
 theorem IsWeierstrassOfDegree.leadingDegree {n d : ℕ}
     {w : TateAlgebra K (Fin (n + 1))} (hw : IsWeierstrassOfDegree d w) :
     leadingDegree (MonomialOrder.lex : MonomialOrder (Fin (n + 1))) w =
@@ -371,6 +382,7 @@ theorem IsWeierstrassOfDegree.leadingDegree {n d : ℕ}
     rw [hzero, norm_zero, hw.norm_eq_one K] at hμ
     norm_num at hμ
 
+omit [CompleteSpace K] in
 /-- A monic first-variable polynomial is Weierstrass exactly when its Tate norm is at most one. -/
 theorem isWeierstrassOfDegree_firstVariablePolynomialMap_iff {n d : ℕ}
     {p : Polynomial (TateAlgebra K (Fin n))}
@@ -415,6 +427,7 @@ theorem isWeierstrassOfDegree_firstVariablePolynomialMap_iff {n d : ℕ}
         rw [Polynomial.coeff_eq_zero_of_natDegree_lt (hp.natDegree_eq ▸ hdlt)]
         simp
 
+omit [CompleteSpace K] in
 /-- Rückert's factor-closure property for Weierstrass polynomials (Definition 4.1.13, R1). -/
 theorem isWeierstrassOfDegree_mul_iff {n d e : ℕ}
     {p q : Polynomial (TateAlgebra K (Fin n))}

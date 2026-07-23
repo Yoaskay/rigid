@@ -2,7 +2,6 @@ import Rigid.TateAlgebra.RelativeUniversalProperty
 import Mathlib.Algebra.Exact.Basic
 
 set_option linter.style.header false
-set_option linter.unusedSectionVars false
 
 /-!
 # The completed Laurent coefficient sequence
@@ -70,6 +69,7 @@ private theorem exponentValue_injective :
   rw [exponent_eq_oneExponent e, exponent_eq_oneExponent e']
   exact congrArg oneExponent h
 
+omit [CompleteSpace A] in
 /-- The coefficient sequence of a one-variable Tate series tends to zero. -/
 theorem tendsto_oneVariable_coeff (p : TateAlgebra A (Fin 1)) :
     Tendsto (fun n ↦ TateAlgebra.coeff A (Fin 1) (oneExponent n) p)
@@ -89,12 +89,14 @@ noncomputable def ofCoefficients (a : ℕ → A) (ha : Tendsto a cofinite (𝓝 
     exact (tendsto_zero_iff_norm_tendsto_zero.mp ha).comp
       exponentValue_injective.tendsto_cofinite⟩
 
+omit [CompleteSpace A] in
 @[simp]
 theorem coeff_ofCoefficients (a : ℕ → A) (ha : Tendsto a cofinite (𝓝 0)) (n : ℕ) :
     TateAlgebra.coeff A (Fin 1) (oneExponent n) (ofCoefficients A a ha) = a n := by
   simp only [TateAlgebra.coeff_apply, ofCoefficients, MvPowerSeries.coeff_apply,
     oneExponent, Finsupp.single_eq_same]
 
+omit [CompleteSpace A] [IsUltrametricDist A] in
 private theorem tendsto_nonnegativeExtension
     (a : ℕ → A) (ha : Tendsto a cofinite (𝓝 0)) :
     Tendsto (fun z : ℤ ↦ if 0 ≤ z then a z.toNat else 0) cofinite (𝓝 0) := by
@@ -179,11 +181,13 @@ noncomputable def difference :
   (positive K A).comp (LinearMap.fst K _ _) -
     (negative K A).comp (LinearMap.snd K _ _)
 
+omit [CompleteSpace K] [CompleteSpace A] in
 @[simp]
 theorem diagonal_apply (a : A) :
     diagonal K A a = (TateAlgebra.C A (Fin 1) a, TateAlgebra.C A (Fin 1) a) :=
   rfl
 
+omit [CompleteSpace K] [CompleteSpace A] in
 @[simp]
 theorem difference_coeff_zero (p q : TateAlgebra A (Fin 1)) :
     (difference K A (p, q)).1 0 =
@@ -191,16 +195,19 @@ theorem difference_coeff_zero (p q : TateAlgebra A (Fin 1)) :
         TateAlgebra.coeff A (Fin 1) (oneExponent 0) q := by
   rfl
 
+omit [CompleteSpace K] [CompleteSpace A] in
 theorem difference_coeff_pos (p q : TateAlgebra A (Fin 1)) (n : ℕ) (hn : 0 < n) :
     (difference K A (p, q)).1 (n : ℤ) =
       TateAlgebra.coeff A (Fin 1) (oneExponent n) p := by
   simp [difference, positive, negative, hn.ne']
 
+omit [CompleteSpace K] [CompleteSpace A] in
 theorem difference_coeff_neg (p q : TateAlgebra A (Fin 1)) (n : ℕ) (hn : 0 < n) :
     (difference K A (p, q)).1 (-(n : ℤ)) =
       -TateAlgebra.coeff A (Fin 1) (oneExponent n) q := by
   simp [difference, positive, negative, hn.ne']
 
+omit [CompleteSpace K] [CompleteSpace A] in
 /-- The image of the diagonal constants is the kernel of Laurent coefficient difference. -/
 theorem exact : Function.Exact (diagonal K A) (difference K A) := by
   rintro ⟨p, q⟩
@@ -271,6 +278,7 @@ theorem exact : Function.Exact (diagonal K A) (difference K A) := by
           (n + 1) (Nat.succ_pos n) using 1 <;>
           simp [oneExponent]
 
+omit [CompleteSpace K] [CompleteSpace A] in
 /-- Every restricted Laurent coefficient family splits into a nonnegative and a nonpositive Tate
 series. -/
 theorem difference_surjective : Function.Surjective (difference K A) := by
@@ -315,6 +323,7 @@ theorem difference_surjective : Function.Surjective (difference K A) := by
       · rw [coeff_ofCoefficients]
         simp [qa]
 
+omit [CompleteSpace K] [CompleteSpace A] in
 /-- The completed Laurent coefficient sequence is short exact. -/
 theorem shortExact :
     Function.Injective (diagonal K A) ∧

@@ -20,6 +20,7 @@ variable (K : Type u) [NontriviallyNormedField K] [CompleteSpace K] [IsUltrametr
 variable {A : Type v} [NormedCommRing A] [NormedAlgebra K A] [CompleteSpace A]
   [IsUltrametricDist A] [Nontrivial A]
 
+omit [CompleteSpace A] in
 /-- For every element, some minimal-prime quotient preserves its spectral radius. -/
 theorem exists_minimalPrime_spectralRadius_eq_quotient
     (hA : IsAffinoidAlgebra K A)
