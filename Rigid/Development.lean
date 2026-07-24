@@ -9,7 +9,9 @@ import Rigid.Berkovich.RelativeNonempty
 import Rigid.Berkovich.CompletedResidue
 import Rigid.Berkovich.RationalLocalization
 import Rigid.Berkovich.AffinoidDomain
+import Rigid.Cech.Normalized
 import Rigid.AffinoidSpectrum.RationalBasis
+import Rigid.AffinoidSpectrum.TateAcyclicity
 import Rigid.AffinoidAlgebra.QuotientNorm
 import Rigid.AffinoidAlgebra.QuotientTopology
 import Rigid.AffinoidAlgebra.RationalDatum
@@ -1479,17 +1481,72 @@ theorem existsUnique_glue (hA : IsAffinoidAlgebra K A)
 /-- The augmented Čech complex of the rational-localization presheaf for a finite rational cover. -/
 noncomputable def augmentedCechComplex (hA : IsAffinoidAlgebra K A)
     {U : AffinoidRationalSubdomain K A}
-    (𝒰 : Cover K A U) : CochainComplex (ModuleCat K) ℕ := sorry
+    (𝒰 : Cover K A U) : CochainComplex (ModuleCat.{v} K) ℕ := by
+  let hA' : Rigid.IsAffinoidAlgebra K A := by
+    obtain ⟨P⟩ := hA
+    exact ⟨{ n := P.n, ideal := P.ideal, equiv := P.equiv }⟩
+  let toRigidDomain (V : AffinoidRationalSubdomain K A) :
+      Rigid.AffinoidRationalSubdomain K A :=
+    { n := V.n, g := V.g, f := V.f, isRational := V.isRational }
+  let U' := toRigidDomain U
+  let 𝒰' : Rigid.AffinoidRationalSubdomain.Cover K A U' :=
+    { m := 𝒰.m
+      domain := fun i ↦ toRigidDomain (𝒰.domain i)
+      subset := by
+        intro i x hx
+        let x' : BerkovichSpectrumOver K A :=
+          { toBerkovichSpectrum :=
+              { seminorm := x.toBerkovichSpectrum.seminorm
+                le_norm' := x.toBerkovichSpectrum.le_norm' }
+            map_algebraMap' := x.map_algebraMap' }
+        have hx' : x' ∈ (𝒰.domain i).carrier := by
+          intro j
+          exact hx j
+        have hU := 𝒰.subset i hx'
+        intro j
+        exact hU j
+      covers := by
+        ext x
+        let x' : BerkovichSpectrumOver K A :=
+          { toBerkovichSpectrum :=
+              { seminorm := x.toBerkovichSpectrum.seminorm
+                le_norm' := x.toBerkovichSpectrum.le_norm' }
+            map_algebraMap' := x.map_algebraMap' }
+        have hcover := Set.ext_iff.mp 𝒰.covers x'
+        constructor
+        · intro hx
+          have hx' : x' ∈ U.carrier := by
+            intro j
+            exact hx j
+          obtain ⟨i, hi⟩ := Set.mem_iUnion.mp (hcover.mp hx')
+          apply Set.mem_iUnion.mpr
+          refine ⟨i, ?_⟩
+          intro j
+          exact hi j
+        · intro hx
+          obtain ⟨i, hi⟩ := Set.mem_iUnion.mp hx
+          have hi' : x' ∈ (𝒰.domain i).carrier := by
+            intro j
+            exact hi j
+          have hx' := hcover.mpr (Set.mem_iUnion.mpr ⟨i, hi'⟩)
+          intro j
+          exact hx' j }
+  exact 𝒰'.normalizedCechComplex K A hA'
 
 /-- Degree zero of the augmented Čech complex is the ring of functions on the covered domain. -/
 noncomputable def augmentedCechComplexDegreeZeroIso (hA : IsAffinoidAlgebra K A)
     {U : AffinoidRationalSubdomain K A} (𝒰 : Cover K A U) :
-    (𝒰.augmentedCechComplex K A hA).X 0 ≅ ModuleCat.of K U.Sections := sorry
+    (𝒰.augmentedCechComplex K A hA).X 0 ≅ ModuleCat.of K U.Sections := by
+  change ModuleCat.of K U.Sections ≅ ModuleCat.of K U.Sections
+  exact Iso.refl _
 
 /-- Tate acyclicity: the augmented Čech complex of every finite rational cover is exact. -/
 theorem tateAcyclicity (hA : IsAffinoidAlgebra K A)
     {U : AffinoidRationalSubdomain K A} (𝒰 : Cover K A U) :
-    (𝒰.augmentedCechComplex K A hA).Acyclic := sorry
+    (𝒰.augmentedCechComplex K A hA).Acyclic := by
+  unfold augmentedCechComplex
+  dsimp only
+  apply Rigid.AffinoidRationalSubdomain.Cover.tateAcyclicity K A
 
 end Cover
 

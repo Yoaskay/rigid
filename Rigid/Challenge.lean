@@ -1009,7 +1009,7 @@ theorem existsUnique_glue (hA : IsAffinoidAlgebra K A)
 /-- The augmented Čech complex of the rational-localization presheaf for a finite rational cover. -/
 noncomputable def augmentedCechComplex (hA : IsAffinoidAlgebra K A)
     {U : AffinoidRationalSubdomain K A}
-    (𝒰 : Cover K A U) : CochainComplex (ModuleCat K) ℕ := sorry
+    (𝒰 : Cover K A U) : CochainComplex (ModuleCat.{v} K) ℕ := sorry
 
 /-- Degree zero of the augmented Čech complex is the ring of functions on the covered domain. -/
 noncomputable def augmentedCechComplexDegreeZeroIso (hA : IsAffinoidAlgebra K A)
